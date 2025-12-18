@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Check, Monitor, User } from "lucide-react"
 
@@ -28,10 +29,17 @@ const services = [
 
 export function Services() {
   return (
-    <section id="services" className="relative bg-black px-6 py-24 lg:px-12">
-      <div className="absolute inset-0 opacity-20">
-        {/* Placeholder for gym background image */}
-        <div className="h-full w-full bg-gradient-to-br from-gray-900 via-black to-gray-900" />
+    <section id="services" className="relative overflow-hidden bg-black px-6 py-24 lg:px-12">
+      <div className="absolute inset-0">
+        <Image
+          src="/images/ambitious-studio-rick-barrett-aw9cszR7FGU-unsplash.jpg"
+          alt="Gym floor with equipment background"
+          fill
+          className="object-cover object-center"
+          priority={false}
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-black/70" />
       </div>
       <div className="relative container mx-auto max-w-6xl">
         <div className="mb-16 text-center">

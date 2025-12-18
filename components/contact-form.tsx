@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -20,10 +21,17 @@ export function ContactForm() {
   }
 
   return (
-    <section id="contact" className="relative bg-black px-6 py-24 lg:px-12">
-      <div className="absolute inset-0 opacity-30">
-        {/* Placeholder for gym background image */}
-        <div className="h-full w-full bg-gradient-to-br from-gray-900 via-black to-gray-900" />
+    <section id="contact" className="relative overflow-hidden bg-black px-6 py-24 lg:px-12">
+      <div className="absolute inset-0">
+        <Image
+          src="/images/ambitious-studio-rick-barrett-1RNQ11ZODJM-unsplash.jpg"
+          alt="Gym interior with dumbbells and equipment background"
+          fill
+          className="object-cover object-center"
+          priority={false}
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-black/70" />
       </div>
       <div className="relative container mx-auto max-w-2xl">
         <div className="mb-12 text-center">

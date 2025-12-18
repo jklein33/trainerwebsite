@@ -1,3 +1,5 @@
+import Image from "next/image"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Check } from "lucide-react"
 
@@ -13,12 +15,14 @@ export function Hero() {
           <p className="text-lg text-white sm:text-xl lg:text-2xl">
             Become the excellent man you were born to be.
           </p>
-          <Button 
-            size="lg" 
-            className="w-fit bg-orange-500 text-white hover:bg-orange-600 text-base sm:text-lg px-8 py-6 rounded-lg font-medium shadow-lg"
-          >
-            Find the Dawg
-          </Button>
+          <Link href="/dawg-strength-program">
+            <Button 
+              size="lg" 
+              className="w-fit bg-orange-500 text-white hover:bg-orange-600 text-base sm:text-lg px-8 py-6 rounded-lg font-medium shadow-lg"
+            >
+              Find the Dawg
+            </Button>
+          </Link>
           <div className="flex flex-col gap-4 pt-6">
             <div className="flex items-center gap-3">
               <Check className="h-6 w-6 flex-shrink-0 text-orange-500" />
@@ -37,9 +41,15 @@ export function Hero() {
         
         {/* Right Image */}
         <div className="relative flex items-center justify-center lg:justify-end">
-          <div className="relative h-[500px] w-full max-w-sm overflow-hidden sm:h-[600px] lg:h-[700px]">
-            {/* Placeholder for hero image - replace with actual image */}
-            <div className="h-full w-full bg-gradient-to-br from-gray-800 via-gray-700 to-gray-900" />
+          <div className="relative h-[600px] w-full max-w-md overflow-hidden rounded-lg sm:h-[700px] lg:h-[800px] xl:h-[900px] bg-black">
+            <Image
+              src="/images/james_pose.jpg"
+              alt="Coach posing and flexing muscles at Dawg Strength"
+              fill
+              priority
+              className="object-contain object-center"
+              sizes="(min-width: 1024px) 500px, 70vw"
+            />
           </div>
         </div>
       </div>

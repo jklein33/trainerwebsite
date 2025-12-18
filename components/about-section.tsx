@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 
 export function AboutSection() {
@@ -10,8 +11,13 @@ export function AboutSection() {
           {/* Left Image */}
           <div className="relative">
             <div className="relative aspect-[3/4] overflow-hidden rounded-lg">
-              {/* Placeholder for James and puppy image */}
-              <div className="h-full w-full bg-gradient-to-br from-gray-700 via-gray-600 to-gray-800" />
+              <Image
+                src="/images/classic_stage.jpg"
+                alt="James on competition stage"
+                fill
+                className="object-cover object-top"
+                sizes="(min-width: 1024px) 50vw, 100vw"
+              />
             </div>
           </div>
           
