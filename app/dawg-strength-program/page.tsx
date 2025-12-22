@@ -65,10 +65,13 @@ export default function DawgStrengthProgram() {
           {/* Image that creates connection and relatability */}
           <div className="mb-12">
             <div className="relative aspect-video overflow-hidden rounded-2xl">
-              {/* PLACEHOLDER: Relatable image */}
-              <div className="h-full w-full bg-gradient-to-br from-gray-800 via-gray-700 to-gray-900 flex items-center justify-center">
-                <span className="text-gray-500">Emotional Connection Image Placeholder</span>
-              </div>
+              <Image
+                src="/images/success_collage.png"
+                alt="Success collage showing transformation and achievements"
+                fill
+                className="object-cover object-center"
+                sizes="100vw"
+              />
             </div>
           </div>
 
@@ -92,10 +95,13 @@ export default function DawgStrengthProgram() {
           {/* Additional Image */}
           <div className="mt-12">
             <div className="relative aspect-[16/9] overflow-hidden rounded-2xl">
-              {/* PLACEHOLDER: Additional transformational image */}
-              <div className="h-full w-full bg-gradient-to-br from-gray-800 via-gray-700 to-gray-900 flex items-center justify-center">
-                <span className="text-gray-500">Additional Image Placeholder</span>
-              </div>
+              <Image
+                src="/images/hpe_intern.JPG"
+                alt="James at Hewlett Packard Enterprise"
+                fill
+                className="object-cover object-center"
+                sizes="100vw"
+              />
             </div>
           </div>
 
@@ -138,11 +144,14 @@ export default function DawgStrengthProgram() {
         <div className="container mx-auto max-w-6xl">
           {/* Image that conveys what it's like to have results */}
           <div className="mb-12">
-            <div className="relative aspect-video overflow-hidden rounded-2xl">
-              {/* PLACEHOLDER: Image showing results */}
-              <div className="h-full w-full bg-gradient-to-br from-gray-800 via-gray-700 to-gray-900 flex items-center justify-center">
-                <span className="text-gray-500">Results Image Placeholder</span>
-              </div>
+            <div className="relative aspect-video overflow-hidden rounded-2xl bg-black">
+              <Image
+                src="/images/2025_before_after.png"
+                alt="Before and after transformation results"
+                fill
+                className="object-contain object-center"
+                sizes="100vw"
+              />
             </div>
           </div>
 

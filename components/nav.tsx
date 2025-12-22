@@ -22,12 +22,12 @@ export function Nav() {
   ]
 
   return (
-    <nav className="sticky top-0 z-50 flex items-center justify-between bg-black px-6 py-4 lg:px-12">
+    <nav className="sticky top-0 z-50 flex items-center justify-between bg-black px-6 py-2 lg:px-12">
       <Link href="/" className="flex items-center">
         <img
           src="/images/DawgStrengthLogo.png"
           alt="Dawg Strength logo"
-          className="h-28 w-auto object-contain"
+          className="h-20 w-auto object-contain"
         />
       </Link>
       <div className="hidden items-center gap-6 md:flex lg:gap-8">
