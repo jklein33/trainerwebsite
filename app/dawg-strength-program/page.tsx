@@ -93,25 +93,25 @@ export default function DawgStrengthProgram() {
             {/* Small Image - Adjust size by changing max-w-lg (options: max-w-sm, max-w-md, max-w-lg, max-w-xl, max-w-2xl) */}
             <div className="my-8 max-w-4xl mx-auto">
               <div className="relative aspect-square overflow-hidden rounded-2xl bg-black">
-                <Image
-                  src="/images/hpe_intern.JPG"
-                  alt="James at Hewlett Packard Enterprise"
-                  fill
+              <Image
+                src="/images/hpe_intern.JPG"
+                alt="James at Hewlett Packard Enterprise"
+                fill
                   className="object-contain object-center"
                   sizes="(max-width: 768px) 100vw, 50vw"
-                />
+              />
               </div>
             </div>
 
-            <p className="text-4xl text-gray-300 font-semibold">
+            <p className="text-5xl text-gray-300 font-semibold">
               Fitness and nutrition used to be overwhelming - So much time wasted.
             </p>
 
-            <p className="text-lg text-gray-300">
+            <p className="text-xl text-gray-300">
               It took me 7 years to find what actually worked for me as an IT professional attempting to balance both career and wellness.
             </p>
 
-            <p className="text-2xl text-gray-400 font-semibold text-orange-400">
+            <p className="text-3xl text-gray-400 font-semibold text-orange-400">
               The DAWG method is what I wish I&apos;d had for myself - a proven, curated system to give you back your body, your brain and your productivity in record time.
             </p>
           </div>
@@ -144,9 +144,18 @@ export default function DawgStrengthProgram() {
               </p>
             </div>
 
-            {/* Giphy Placeholder */}
+            {/* Giphy Image */}
             <div className="text-center py-4">
-              <p className="text-gray-500 italic">[GIPHY PLACEHOLDER]</p>
+              <div className="relative max-w-xl mx-auto aspect-square overflow-hidden rounded-2xl bg-black">
+                <Image
+                  src="/images/Backdoublebiceps.gif"
+                  alt="Bodybuilding pose"
+                  fill
+                  className="object-contain object-center"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  unoptimized
+                />
+              </div>
             </div>
 
             <div className="bg-gray-900/50 rounded-xl p-8 border border-gray-800">
@@ -164,9 +173,18 @@ export default function DawgStrengthProgram() {
               </p>
             </div>
 
-            {/* Giphy Placeholder */}
+            {/* Giphy Image - Adjust size by changing max-w-xl (options: max-w-md, max-w-lg, max-w-xl, max-w-2xl, max-w-4xl) */}
             <div className="text-center py-4">
-              <p className="text-gray-500 italic">[GIPHY PLACEHOLDER]</p>
+              <div className="relative max-w-5xl mx-auto aspect-video overflow-hidden rounded-2xl bg-black">
+                <Image
+                  src="/images/incorrectexercise.gif"
+                  alt="Squat exercise demonstration"
+                  fill
+                  className="object-contain object-center"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  unoptimized
+                />
+              </div>
             </div>
 
             <div className="bg-gray-900/50 rounded-xl p-8 border border-gray-800">
@@ -184,9 +202,18 @@ export default function DawgStrengthProgram() {
               </p>
             </div>
 
-            {/* Giphy Placeholder */}
+            {/* Giphy Image */}
             <div className="text-center py-4">
-              <p className="text-gray-500 italic">[GIPHY PLACEHOLDER]</p>
+              <div className="relative max-w-2xl mx-auto aspect-square overflow-hidden rounded-2xl bg-black">
+                <Image
+                  src="/images/squat.gif"
+                  alt="Squat exercise demonstration"
+                  fill
+                  className="object-contain object-center"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  unoptimized
+                />
+              </div>
             </div>
 
             <div className="bg-gray-900/50 rounded-xl p-8 border border-gray-800">
@@ -198,9 +225,18 @@ export default function DawgStrengthProgram() {
               </p>
             </div>
 
-            {/* Giphy Placeholder */}
-            <div className="text-center py-4">
-              <p className="text-gray-500 italic">[GIPHY PLACEHOLDER]</p>
+             {/* Giphy Image - Adjust size by changing max-w-xl (options: max-w-md, max-w-lg, max-w-xl, max-w-2xl, max-w-4xl) */}
+             <div className="text-center py-4">
+              <div className="relative max-w-6xl mx-auto aspect-video overflow-hidden rounded-2xl bg-black">
+                <Image
+                  src="/images/logpress.gif"
+                  alt="Squat exercise demonstration"
+                  fill
+                  className="object-contain object-center"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  unoptimized
+                />
+              </div>
             </div>
             
             <div className="bg-gray-900/50 rounded-xl p-8 border border-gray-800">
