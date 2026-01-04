@@ -62,7 +62,7 @@ export default function DawgStrengthProgram() {
 
           {/* Transformational Story */}
           <div className="max-w-4xl mx-auto space-y-6 text-lg leading-relaxed">
-            <p className="text-xl text-gray-300">
+            <p className="text-3xl text-gray-300">
               <span className="text-orange-400 italic font-semibold">Envision the Peace</span> – Challenges were part of daily life as a product management analyst at HP.
             </p>
 
@@ -78,32 +78,32 @@ export default function DawgStrengthProgram() {
               Solutions appeared. Problems were solved with ease.
             </p>
 
-            <p className="text-lg text-gray-300">
+            <p className="text-2xl text-gray-300">
               I became a machine - both at work and with my physical fitness.
             </p>
 
-            <p className="text-lg text-gray-300 font-semibold text-white">
+            <p className="text-3xl text-gray-300 font-semibold text-white">
               Succeeding on all levels.
             </p>
 
-            <p className="text-xl text-gray-300 italic text-orange-400 mt-8">
+            <p className="text-2xl text-gray-300 italic text-orange-400 mt-8">
               It wasn&apos;t always this way, though.
             </p>
 
-            {/* Small Image */}
-            <div className="my-8 max-w-md mx-auto">
+            {/* Small Image - Adjust size by changing max-w-lg (options: max-w-sm, max-w-md, max-w-lg, max-w-xl, max-w-2xl) */}
+            <div className="my-8 max-w-4xl mx-auto">
               <div className="relative aspect-square overflow-hidden rounded-2xl bg-black">
-              <Image
-                src="/images/hpe_intern.JPG"
-                alt="James at Hewlett Packard Enterprise"
-                fill
+                <Image
+                  src="/images/hpe_intern.JPG"
+                  alt="James at Hewlett Packard Enterprise"
+                  fill
                   className="object-contain object-center"
                   sizes="(max-width: 768px) 100vw, 50vw"
-              />
+                />
               </div>
             </div>
 
-            <p className="text-lg text-gray-300">
+            <p className="text-4xl text-gray-300 font-semibold">
               Fitness and nutrition used to be overwhelming - So much time wasted.
             </p>
 
@@ -111,7 +111,7 @@ export default function DawgStrengthProgram() {
               It took me 7 years to find what actually worked for me as an IT professional attempting to balance both career and wellness.
             </p>
 
-            <p className="text-xl text-gray-300 font-semibold text-white">
+            <p className="text-2xl text-gray-400 font-semibold text-orange-400">
               The DAWG method is what I wish I&apos;d had for myself - a proven, curated system to give you back your body, your brain and your productivity in record time.
             </p>
           </div>
