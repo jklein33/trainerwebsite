@@ -34,12 +34,8 @@ This guide explains how to set up Stripe MCP (Model Context Protocol) in Cursor 
 ```json
 {
   "mcpServers": {
-    "stripe": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-stripe"
-      ],
+    "Stripe": {
+      "command": "npx -y @stripe/mcp --tools=all",
       "env": {
         "STRIPE_SECRET_KEY": "sk_test_your_secret_key_here"
       }
@@ -53,6 +49,8 @@ This guide explains how to set up Stripe MCP (Model Context Protocol) in Cursor 
 - Use test keys (`sk_test_`) for development
 - Use live keys (`sk_live_`) only in production
 - The secret key is used server-side only and never exposed to the client
+- The `--tools=all` flag enables all available Stripe MCP tools
+- Server name is case-sensitive: use `"Stripe"` (capital S) as shown
 
 ### Step 3: Verify MCP Connection
 
@@ -115,17 +113,40 @@ NEXT_PUBLIC_STRIPE_PRICE_ID=price_1SmOZKKx2xkrGl8oz8fTBYpI
 1. **Never commit `.env.local` to git** - It's already in `.gitignore`
 2. **Use test keys for development** - Test keys start with `sk_test_` and `pk_test_`
 3. **Use live keys for production** - Live keys start with `sk_live_` and `pk_live_`
-4. **The `NEXT_PUBLIC_` prefix** makes variables available to the browser (safe for publishable keys only)
+4. **Keys must match modes** - You **cannot mix** test and live keys. If using a test secret key (`sk_test_`), you must use a test publishable key (`pk_test_`). Same for live keys.
+5. **The `NEXT_PUBLIC_` prefix** makes variables available to the browser (safe for publishable keys only)
+6. **Price IDs are mode-specific** - Test prices only work with test keys, live prices only work with live keys
 
 ### Getting Your Price ID
 
 If you need to find or create a new price:
 
 1. Go to [Stripe Dashboard](https://dashboard.stripe.com/products)
-2. Click on your product
-3. Find the **Price ID** (starts with `price_`)
-4. If no price exists, click **Add another price** and create one
-5. Copy the Price ID to your `.env.local`
+2. **Important**: Make sure you're in the correct mode (Test mode for testing, Live mode for production) - toggle in the top right
+3. Click on your product
+4. Find the **Price ID** (starts with `price_`)
+5. If no price exists, click **Add another price** and create one
+6. Copy the Price ID to your `.env.local`
+
+### Switching Between Test and Live Modes
+
+When switching between test and live modes, you need to update **all three** environment variables:
+
+**For Test Mode:**
+```env
+STRIPE_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+NEXT_PUBLIC_STRIPE_PRICE_ID=price_test_...  # Must be a test price ID
+```
+
+**For Live Mode:**
+```env
+STRIPE_SECRET_KEY=sk_live_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...
+NEXT_PUBLIC_STRIPE_PRICE_ID=price_live_...  # Must be a live price ID
+```
+
+**Remember**: After changing environment variables, restart your Next.js dev server!
 
 ---
 

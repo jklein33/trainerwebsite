@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
+import { CheckoutButton } from "@/components/checkout-button"
 
 export default function DawgStrengthProgram() {
   return (
@@ -38,12 +38,12 @@ export default function DawgStrengthProgram() {
       {/* SECTION 2: ACTION TAKER BUTTON */}
       <section className="bg-black px-6 py-8 lg:px-12">
         <div className="container mx-auto max-w-4xl text-center">
-          <Button 
+          <CheckoutButton 
             size="lg" 
             className="bg-orange-500 text-white hover:bg-orange-600 text-lg sm:text-xl px-12 py-8 rounded-xl font-bold shadow-lg"
           >
             Let's Go
-          </Button>
+          </CheckoutButton>
         </div>
       </section>
 
@@ -118,12 +118,12 @@ export default function DawgStrengthProgram() {
 
           {/* Action Button - Emotionally Driven */}
           <div className="mt-12 text-center">
-            <Button 
+            <CheckoutButton 
               size="lg" 
               className="bg-orange-500 text-white hover:bg-orange-600 text-lg sm:text-xl px-12 py-8 rounded-xl font-bold shadow-lg"
             >
               Choose Peace of Mind
-            </Button>
+            </CheckoutButton>
           </div>
         </div>
       </section>
@@ -266,12 +266,12 @@ export default function DawgStrengthProgram() {
 
           {/* Action Button */}
           <div className="mt-12 text-center">
-          <Button 
+          <CheckoutButton 
             size="lg" 
             className="bg-orange-500 text-white hover:bg-orange-600 text-lg sm:text-xl px-12 py-8 rounded-xl font-bold shadow-lg"
           >
               GET THE COMPLETE SOLUTION
-          </Button>
+          </CheckoutButton>
           </div>
         </div>
       </section>
@@ -300,12 +300,12 @@ export default function DawgStrengthProgram() {
 
           {/* Action Button */}
           <div className="text-center">
-            <Button 
+            <CheckoutButton 
               size="lg" 
               className="bg-orange-500 text-white hover:bg-orange-600 text-lg sm:text-xl px-12 py-8 rounded-xl font-bold shadow-lg"
             >
               CREATE YOUR OWN SUCCESS STORY
-            </Button>
+            </CheckoutButton>
           </div>
         </div>
       </section>
@@ -354,12 +354,12 @@ export default function DawgStrengthProgram() {
 
           {/* Action Button */}
           <div className="mt-12 text-center">
-          <Button 
+          <CheckoutButton 
             size="lg" 
             className="bg-orange-500 text-white hover:bg-orange-600 text-lg sm:text-xl px-12 py-8 rounded-xl font-bold shadow-lg"
           >
               COMMIT NOW
-          </Button>
+          </CheckoutButton>
           </div>
         </div>
       </section>
