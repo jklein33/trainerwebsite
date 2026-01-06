@@ -5,10 +5,10 @@ import { Check } from "lucide-react"
 
 export function Hero() {
   return (
-    <section id="hero" className="relative flex min-h-screen items-center bg-black px-6 lg:px-12">
-      <div className="container mx-auto grid gap-12 lg:grid-cols-[2fr_1fr] lg:gap-16">
+    <section id="hero" className="relative flex bg-black px-6 pt-4 lg:px-12 lg:pt-6">
+      <div className="container mx-auto grid gap-8 lg:grid-cols-[2fr_1fr] lg:gap-16">
         {/* Left Content */}
-        <div className="flex flex-col justify-center space-y-8 pt-20 lg:pt-0">
+        <div className="flex flex-col space-y-8">
           <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl">
             Do you have that Dawg in you?
           </h1>

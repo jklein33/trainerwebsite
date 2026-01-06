@@ -22,12 +22,12 @@ export function Nav() {
   ]
 
   return (
-    <nav className="sticky top-0 z-50 flex items-center justify-between bg-black px-6 py-2 lg:px-12">
+    <nav className="sticky top-0 z-50 flex items-center justify-between bg-black px-6 py-4 lg:px-12 lg:py-6">
       <Link href="/" className="flex items-center">
         <img
           src="/images/DawgStrengthLogo.png"
           alt="Dawg Strength logo"
-          className="h-20 w-auto object-contain"
+          className="h-32 w-auto object-contain lg:h-40"
         />
       </Link>
       <div className="hidden items-center gap-6 md:flex lg:gap-8">
@@ -36,7 +36,7 @@ export function Nav() {
             key={link.href}
             href={link.href}
             onClick={(e) => handleClick(e, link.href)}
-            className="text-base font-medium text-white transition-colors hover:text-orange-500 cursor-pointer"
+            className="text-base font-medium text-white transition-colors hover:text-orange-500 cursor-pointer lg:text-lg"
           >
             {link.label}
           </a>

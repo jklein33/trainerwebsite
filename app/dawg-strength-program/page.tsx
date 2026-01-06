@@ -62,16 +62,16 @@ export default function DawgStrengthProgram() {
 
           {/* Transformational Story */}
           <div className="max-w-4xl mx-auto space-y-6 text-lg leading-relaxed">
-            <p className="text-3xl text-gray-300">
+            <p className="text-4xl text-gray-300">
               <span className="text-orange-400 italic font-semibold">Envision the Peace</span> – Challenges were part of daily life as a product management analyst at HP.
             </p>
 
-            <p className="text-lg text-gray-300">
+            <p className="text-3xl text-gray-300 italic">
               When a project felt like it was about to swallow me whole, I headed to the gym to clear my mind.
             </p>
 
-            <p className="text-lg text-gray-300">
-              In the heavy work of moving weights, my brain found clarity.
+            <p className="text-2xl text-gray-300 font-semibold">
+              In the midst of heavy lifting, my brain found clarity.
             </p>
 
             <p className="text-lg text-gray-300">
@@ -162,15 +162,24 @@ export default function DawgStrengthProgram() {
               <h3 className="text-2xl font-bold text-white mb-4">
                 Maybe I should try to get in shape on my own before I try this program?
               </h3>
-              <p className="text-lg text-gray-300 leading-relaxed mb-4">
+              <p className="text-lg text-gray-300 leading-relaxed mb-4 underline">
                 DAWG Strength is for men who value time and want results now.
               </p>
-              <p className="text-lg text-gray-300 leading-relaxed mb-4">
-                Those men aren&apos;t willing to waste any time &quot;figuring it out,&quot; because they know it comes at a cost - to them, to their families and to their productivity at work. Most people who want to do it on their own are just scared that they won&apos;t get results from their investment - and that makes total sense.
+              <p className="text-lg text-gray-300 leading-relaxed mb-6 italic">
+                Those men aren&apos;t willing to waste any time &quot;figuring it out,&quot; because they know it comes at a cost - to them, to their families and to their productivity at work. 
               </p>
-              <p className="text-lg text-gray-300 leading-relaxed">
-                Ask yourself these questions. Do you make good decisions, generally? What would it take to trust yourself? Can you imagine how you&apos;ll show up differently when you&apos;ve made an investment in your health versus doing it alone? How would it feel to allow yourself to be supported, the same way you support others?
+              <p className="text-lg text-gray-300 leading-relaxed mb-4 font-semibold">
+                Most people who want to do it on their own are just scared that they won&apos;t get results from their investment - and that makes total sense.
               </p>
+              <p className="text-lg text-gray-300 leading-relaxed mb-3">
+                Ask yourself these questions:
+              </p>
+              <ul className="text-lg text-gray-300 leading-relaxed space-y-2 list-disc list-inside ml-4">
+                <li>Do you make good decisions, generally?</li>
+                <li>What would it take to trust yourself?</li>
+                <li>Can you imagine how you&apos;ll show up differently when you&apos;ve made an investment in your health versus doing it alone?</li>
+                <li>How would it feel to allow yourself to be supported, the same way you support others?</li>
+              </ul>
             </div>
 
             {/* Giphy Image - Adjust size by changing max-w-xl (options: max-w-md, max-w-lg, max-w-xl, max-w-2xl, max-w-4xl) */}
@@ -194,10 +203,16 @@ export default function DawgStrengthProgram() {
               <p className="text-lg text-gray-300 leading-relaxed mb-4">
                 DAWG Strength is the whole solution to help you lose 30 lbs without wasting time, so it&apos;s the only option for working with me virtually.
               </p>
-              <p className="text-lg text-gray-300 leading-relaxed mb-4">
-                No one ever budgets for a coaching program. The men who join DAWG Strength are problem solvers who find a way to budget and make sacrifices for the program - and many find they earn the money back on the back end because they&apos;re more productive at work, more likely to apply for promotions and confident chasing lucrative opportunities.
+              <p className="text-lg font-semibold text-gray-300 leading-relaxed mb-4 italic underline">
+                No one ever budgets for a coaching program.
               </p>
-              <p className="text-lg text-gray-300 leading-relaxed font-semibold text-white">
+              <p className="text-lg text-gray-300 leading-relaxed mb-4">
+                The men who join DAWG Strength are problem solvers who find a way to budget and make sacrifices for the program.
+              </p>
+              <p className="text-xl text-gray-300 leading-relaxed mb-4 font-semibold">
+                And many find they earn the money back on the back end because they&apos;re more productive at work, more likely to apply for promotions and have more confidence in themselves chasing lucrative opportunities.
+              </p>
+              <p className="text-2xl text-gray-300 leading-relaxed font-semibold text-orange-400">
                 The real question is - if you knew you&apos;d lose 30 lbs in 4-6 months, would the result be worth the investment?
               </p>
             </div>
@@ -320,15 +335,15 @@ export default function DawgStrengthProgram() {
               <h2 className="text-4xl font-bold text-white sm:text-5xl">
                 Built by Someone Who&apos;s Been There
               </h2>
-              <div className="space-y-4 text-lg leading-relaxed text-gray-300">
-                <p>
-                  James Klein is a certified personal trainer, nutrition coach and expert advisor for publications like Fit & Well. He has helped dozens of clients lose weight and get stronger. The nickname &quot;DAWG&quot; was won on the high school Lacrosse field, where he was erroneously underestimated - until he unleashed his inner Dawg and claimed the respect he deserved.
+              <div className="space-y-4 text-lg leading-relaxed text-orange-300">
+                <p className="text-white font-semibold">
+                  James Klein is a certified personal trainer, nutrition coach and expert advisor for publications like Fit & Well. He has helped dozens of clients lose weight, get stronger and lead healhier lives. The nickname &quot;KleinDawg&quot; was won on the high school Lacrosse field, where he was underestimated - until he let out his inner Dawg and claimed the respect he deserved.
                 </p>
                 <p>
-                  A lifelong hockey player, he played ACHA D2&D3 hockey while pursuing his degree in Computer Information Systems. Like many athletes, he felt lost when his collegiate career ended - drowning himself in booze and food until he discovered powerlifting and bodybuilding.
+                  A lifelong hockey player, he played ACHA Divison III hockey while pursuing his degree in Computer Information Systems. Like many athletes, he felt lost when his collegiate career ended - drowning himself in booze and food until he discovered powerlifting and bodybuilding.
                 </p>
                 <p className="text-white font-semibold">
-                  The gym didn&apos;t just transform his body, helping him to lose more than 20 lbs and build a fit physique, but it helped him gain the confidence that led to a massive career success and personal wealth accumulation.
+                  The gym didn&apos;t just transform his body, helping him to lose more than 50 lbs and build a fit physique, but it helped him gain the confidence that led to a massive career success and personal wealth accumulation.
                 </p>
                 <p>
                   James is no stranger to adversity; DAWG Strength was his anchor through massive life events, like a near-deadly car accident, the mayhem of COVID, the gain and loss of millions of dollars and the premature loss of his mom.
