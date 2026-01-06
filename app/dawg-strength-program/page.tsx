@@ -168,7 +168,7 @@ export default function DawgStrengthProgram() {
               <p className="text-lg text-gray-300 leading-relaxed mb-6 italic">
                 Those men aren&apos;t willing to waste any time &quot;figuring it out,&quot; because they know it comes at a cost - to them, to their families and to their productivity at work. 
               </p>
-              <p className="text-lg text-gray-300 leading-relaxed mb-4 font-semibold">
+              <p className="text-lg text-orange-500 leading-relaxed mb-4 font-semibold">
                 Most people who want to do it on their own are just scared that they won&apos;t get results from their investment - and that makes total sense.
               </p>
               <p className="text-lg text-gray-300 leading-relaxed mb-3">
