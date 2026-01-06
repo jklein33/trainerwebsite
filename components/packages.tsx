@@ -1,16 +1,33 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Check } from "lucide-react"
+import type { Stripe } from "@stripe/stripe-js"
 
-let stripePromise: Promise<any> | null = null
+// Validate environment variable at module load
+const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+if (!publishableKey) {
+  console.error('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is not set')
+}
 
-const getStripe = () => {
+const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID
+if (!priceId) {
+  console.error('NEXT_PUBLIC_STRIPE_PRICE_ID is not set')
+}
+
+let stripePromise: Promise<Stripe | null> | null = null
+
+const getStripe = async (): Promise<Stripe | null> => {
+  if (!publishableKey) {
+    console.error('Stripe publishable key is missing')
+    return null
+  }
+
   if (!stripePromise) {
     stripePromise = import("@stripe/stripe-js").then((stripe) =>
-      stripe.loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+      stripe.loadStripe(publishableKey)
     )
   }
   return stripePromise
@@ -20,6 +37,11 @@ export function Packages() {
   const [loading, setLoading] = useState(false)
 
   const handleCheckout = async () => {
+    if (!priceId) {
+      alert('Payment configuration error. Please contact support.')
+      return
+    }
+
     setLoading(true)
     try {
       const response = await fetch('/api/checkout', {
@@ -28,19 +50,35 @@ export function Packages() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!,
+          priceId,
         }),
       })
 
-      const { sessionId } = await response.json()
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || `Server error: ${response.status}`)
+      }
+
+      const data = await response.json()
+      
+      if (!data?.sessionId) {
+        throw new Error('No session ID returned from server')
+      }
 
       const stripe = await getStripe()
-      if (stripe) {
-        await stripe.redirectToCheckout({ sessionId })
+      if (!stripe) {
+        throw new Error('Failed to initialize payment. Please refresh the page.')
+      }
+
+      const { error } = await stripe.redirectToCheckout({ sessionId: data.sessionId })
+      
+      if (error) {
+        throw new Error(error.message || 'Failed to redirect to checkout')
       }
     } catch (error) {
       console.error('Checkout error:', error)
-      alert('Something went wrong. Please try again.')
+      const message = error instanceof Error ? error.message : 'Something went wrong. Please try again.'
+      alert(message)
     } finally {
       setLoading(false)
     }
