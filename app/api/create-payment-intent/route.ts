@@ -11,12 +11,13 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 
 // Allowed price IDs for security
 const ALLOWED_PRICE_IDS = [
-  process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
+  process.env.NEXT_PUBLIC_STRIPE_PRICE_ID, // One-time price
+  'price_1SmwLNKx2xkrGl8olwl91cwM', // Subscription price
 ].filter(Boolean) as string[]
 
 export async function POST(request: NextRequest) {
   try {
-    const { priceId } = await request.json()
+    const { priceId, paymentType } = await request.json()
 
     if (!priceId || typeof priceId !== 'string') {
       return NextResponse.json(
@@ -33,10 +34,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Get the price to determine the amount
+    // Get the price to determine the amount and type
     const price = await stripe.prices.retrieve(priceId)
     
-    if (!price || !price.unit_amount) {
+    if (!price) {
       return NextResponse.json(
         { error: 'Invalid price' },
         { status: 400 }
@@ -46,23 +47,57 @@ export async function POST(request: NextRequest) {
     // Get origin from request URL
     const origin = request.headers.get('origin') || request.nextUrl.origin
 
-    // Create a Payment Intent
+    // Handle subscription payments
+    if (price.recurring || paymentType === 'subscription') {
+      // Create a Setup Intent for subscription with automatic payment methods
+      const setupIntent = await stripe.setupIntents.create({
+        automatic_payment_methods: {
+          enabled: true,
+          allow_redirects: 'always',
+        },
+        metadata: {
+          price_id: priceId,
+          product_name: 'Dawg Strength Program',
+          payment_type: 'subscription',
+        },
+      })
+
+      return NextResponse.json({ 
+        clientSecret: setupIntent.client_secret,
+        amount: price.unit_amount || 0,
+        currency: price.currency,
+        paymentType: 'subscription',
+        priceId: priceId,
+      })
+    }
+
+    // Handle one-time payments
+    if (!price.unit_amount) {
+      return NextResponse.json(
+        { error: 'Invalid price amount' },
+        { status: 400 }
+      )
+    }
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount: price.unit_amount,
       currency: price.currency,
       metadata: {
         price_id: priceId,
         product_name: 'Dawg Strength Program',
+        payment_type: 'one-time',
       },
       automatic_payment_methods: {
         enabled: true,
       },
+      receipt_email: undefined, // Will be collected from PaymentElement
     })
 
     return NextResponse.json({ 
       clientSecret: paymentIntent.client_secret,
       amount: price.unit_amount,
       currency: price.currency,
+      paymentType: 'one-time',
     })
   } catch (error) {
     console.error('Payment Intent creation error:', error)

@@ -16,14 +16,23 @@ interface EmbeddedCheckoutProps {
   clientSecret: string
   amount: number
   currency: string
+  paymentType?: 'one-time' | 'subscription'
+  priceId?: string
   onSuccess?: () => void
 }
 
-function CheckoutForm({ clientSecret, amount, currency, onSuccess }: EmbeddedCheckoutProps) {
+function CheckoutForm({ clientSecret, amount, currency, paymentType = 'one-time', priceId, onSuccess }: EmbeddedCheckoutProps) {
   const stripe = useStripe()
   const elements = useElements()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [email, setEmail] = useState<string>('')
+
+  const paymentElementOptions = {
+    fields: {
+      billingDetails: 'auto' as const,
+    },
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -35,6 +44,13 @@ function CheckoutForm({ clientSecret, amount, currency, onSuccess }: EmbeddedChe
     setLoading(true)
     setError(null)
 
+    // Validate email is provided
+    if (!email || !email.includes('@')) {
+      setError('Please enter a valid email address')
+      setLoading(false)
+      return
+    }
+
     const { error: submitError } = await elements.submit()
     if (submitError) {
       setError(submitError.message || 'An error occurred')
@@ -42,19 +58,89 @@ function CheckoutForm({ clientSecret, amount, currency, onSuccess }: EmbeddedChe
       return
     }
 
-    const { error: confirmError } = await stripe.confirmPayment({
-      elements,
-      clientSecret,
-      confirmParams: {
-        return_url: `${window.location.origin}/success`,
-      },
-    })
+    // Handle subscription payments
+    if (paymentType === 'subscription' && priceId) {
+      try {
+        // Confirm setup intent to get payment method
+        // Note: Many alternative payment methods (Klarna, Affirm, etc.) don't support subscriptions
+        // Only card and some bank transfer methods work with recurring subscriptions
+        const { error: setupError, setupIntent } = await stripe.confirmSetup({
+          elements,
+          clientSecret,
+          redirect: 'if_required',
+        })
 
-    if (confirmError) {
-      setError(confirmError.message || 'Payment failed')
+        if (setupError) {
+          setError(setupError.message || 'Payment setup failed')
+          setLoading(false)
+          return
+        }
+
+        if (setupIntent?.payment_method) {
+          // Create subscription with email
+          const response = await fetch('/api/create-subscription', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              priceId,
+              paymentMethodId: setupIntent.payment_method,
+              customerEmail: email,
+            }),
+          })
+
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}))
+            throw new Error(errorData.error || 'Failed to create subscription')
+          }
+
+          const data = await response.json()
+
+          // If there's a payment intent (for first payment), confirm it
+          if (data.clientSecret) {
+            const { error: paymentError } = await stripe.confirmPayment({
+              clientSecret: data.clientSecret,
+              redirect: 'if_required',
+            })
+
+            if (paymentError) {
+              setError(paymentError.message || 'Payment failed')
+              setLoading(false)
+              return
+            }
+          }
+
+          // Redirect to success page
+          window.location.href = '/success'
+        }
+      } catch (err) {
+        console.error('Subscription error:', err)
+        setError(err instanceof Error ? err.message : 'Failed to process subscription')
+        setLoading(false)
+        return
+      }
     } else {
-      if (onSuccess) {
-        onSuccess()
+      // Handle one-time payments
+      const { error: confirmError } = await stripe.confirmPayment({
+        elements,
+        clientSecret,
+        confirmParams: {
+          return_url: `${window.location.origin}/success`,
+          payment_method_data: {
+            billing_details: {
+              email: email,
+            },
+          },
+        },
+      })
+
+      if (confirmError) {
+        setError(confirmError.message || 'Payment failed')
+      } else {
+        if (onSuccess) {
+          onSuccess()
+        }
       }
     }
 
@@ -78,8 +164,22 @@ function CheckoutForm({ clientSecret, amount, currency, onSuccess }: EmbeddedChe
           </p>
         </div>
         
-        <div className="mb-6">
-          <PaymentElement />
+        <div className="mb-6 space-y-4">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
+              Email Address <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="your.email@example.com"
+            />
+          </div>
+          <PaymentElement options={paymentElementOptions} />
         </div>
 
         {error && (
@@ -101,7 +201,7 @@ function CheckoutForm({ clientSecret, amount, currency, onSuccess }: EmbeddedChe
   )
 }
 
-export function EmbeddedCheckout({ clientSecret, amount, currency, onSuccess }: EmbeddedCheckoutProps) {
+export function EmbeddedCheckout({ clientSecret, amount, currency, paymentType = 'one-time', priceId, onSuccess }: EmbeddedCheckoutProps) {
   if (!stripePromise) {
     return (
       <div className="bg-gray-900/50 rounded-xl p-6 border border-gray-800">
@@ -132,6 +232,8 @@ export function EmbeddedCheckout({ clientSecret, amount, currency, onSuccess }: 
         clientSecret={clientSecret} 
         amount={amount} 
         currency={currency}
+        paymentType={paymentType}
+        priceId={priceId}
         onSuccess={onSuccess}
       />
     </Elements>

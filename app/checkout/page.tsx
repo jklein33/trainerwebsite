@@ -4,52 +4,40 @@ import { useState, useEffect } from "react"
 import { EmbeddedCheckout } from "@/components/embedded-checkout"
 import { useRouter } from "next/navigation"
 
+// Price IDs
+const ONETIME_PRICE_ID = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID || 'price_1Smi6GKx2xkrGl8oaMCLcwNM'
+const SUBSCRIPTION_PRICE_ID = 'price_1SmwLNKx2xkrGl8olwl91cwM'
+
+type PaymentType = 'one-time' | 'subscription'
+
+interface PricingData {
+  oneTime: {
+    priceId: string
+    amount: number
+    currency: string
+    originalAmount: number | null
+  }
+  subscription: {
+    priceId: string
+    monthlyAmount: number
+    currency: string
+    interval: string
+    intervalCount: number
+    totalAmount: number
+    originalMonthlyAmount: number | null
+    originalTotalAmount: number | null
+  }
+}
+
 export default function CheckoutPage() {
+  const [paymentType, setPaymentType] = useState<PaymentType>('one-time')
+  const [pricing, setPricing] = useState<PricingData | null>(null)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [amount, setAmount] = useState<number>(0)
   const [currency, setCurrency] = useState<string>("usd")
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
-
-  const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID
-
-  useEffect(() => {
-    if (!priceId) {
-      setError('Payment configuration error. Please contact support.')
-      setLoading(false)
-      return
-    }
-
-    const createPaymentIntent = async () => {
-      try {
-        const response = await fetch('/api/create-payment-intent', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ priceId }),
-        })
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}))
-          throw new Error(errorData.error || 'Failed to initialize payment')
-        }
-
-        const data = await response.json()
-        setClientSecret(data.clientSecret)
-        setAmount(data.amount)
-        setCurrency(data.currency)
-      } catch (err) {
-        console.error('Payment intent creation error:', err)
-        setError(err instanceof Error ? err.message : 'Failed to initialize payment')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    createPaymentIntent()
-  }, [priceId])
 
   const formatAmount = (amount: number, currency: string) => {
     return new Intl.NumberFormat('en-US', {
@@ -58,25 +46,202 @@ export default function CheckoutPage() {
     }).format(amount / 100)
   }
 
+  const getTotalDueToday = () => {
+    if (!pricing) return 0
+    
+    if (paymentType === 'one-time') {
+      return pricing.oneTime.amount
+    } else {
+      return pricing.subscription.monthlyAmount
+    }
+  }
+
+  // Fetch prices from Stripe on mount
+  useEffect(() => {
+    const fetchPrices = async () => {
+      try {
+        const response = await fetch('/api/get-prices')
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}))
+          throw new Error(errorData.error || 'Failed to fetch prices')
+        }
+
+        const data = await response.json()
+        setPricing(data)
+        setCurrency(data.oneTime.currency)
+      } catch (err) {
+        console.error('Price fetch error:', err)
+        setError(err instanceof Error ? err.message : 'Failed to load pricing')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPrices()
+  }, [])
+
+  const handlePaymentTypeChange = async (type: PaymentType) => {
+    if (!pricing) return
+    
+    setPaymentType(type)
+    setClientSecret(null)
+    setError(null)
+    setLoading(true)
+
+    const priceId = type === 'one-time' ? pricing.oneTime.priceId : pricing.subscription.priceId
+
+    try {
+      const response = await fetch('/api/create-payment-intent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          priceId,
+          paymentType: type,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || 'Failed to initialize payment')
+      }
+
+      const data = await response.json()
+      setClientSecret(data.clientSecret)
+      setAmount(data.amount)
+      setCurrency(data.currency)
+    } catch (err) {
+      console.error('Payment intent creation error:', err)
+      setError(err instanceof Error ? err.message : 'Failed to initialize payment')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Initialize payment when pricing is loaded
+  useEffect(() => {
+    if (pricing) {
+      handlePaymentTypeChange('one-time')
+    }
+  }, [pricing])
+
   return (
     <main className="min-h-screen bg-black">
       <div className="container mx-auto px-6 py-12 lg:px-12 lg:py-16">
         <div className="max-w-6xl mx-auto">
           <div className="grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-16">
-            {/* Left Column: Checkout Form */}
+            {/* Left Column: Payment Plans & Checkout Form */}
             <div>
               <div className="mb-8">
-                <h1 className="text-4xl font-bold text-white mb-4">
-                  Complete Your Purchase
+                <h1 className="text-4xl font-bold text-orange-500 mb-4">
+                  Dawg Strength (Beta Group)
                 </h1>
-                <p className="text-xl text-gray-300">
-                  Join the DAWG Strength Program and transform your life
-                </p>
               </div>
 
-              {loading && (
+              {/* Payment Plan Selector */}
+              {pricing && (
+                <div className="bg-white rounded-2xl p-6 mb-6">
+                  <div className="space-y-4">
+                    {/* One-time Payment Option */}
+                    <label className="flex items-start gap-4 p-4 border-2 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors"
+                      style={{ 
+                        borderColor: paymentType === 'one-time' ? '#f97316' : '#e5e7eb',
+                        backgroundColor: paymentType === 'one-time' ? '#fff7ed' : 'transparent',
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        name="paymentType"
+                        value="one-time"
+                        checked={paymentType === 'one-time'}
+                        onChange={() => handlePaymentTypeChange('one-time')}
+                        className="mt-1 w-5 h-5 text-orange-500"
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-baseline gap-2 mb-1">
+                          <span className="text-2xl font-bold text-gray-900">
+                            {formatAmount(pricing.oneTime.amount, pricing.oneTime.currency)}
+                          </span>
+                          {pricing.oneTime.originalAmount && (
+                            <span className="text-lg text-gray-500 line-through">
+                              {formatAmount(pricing.oneTime.originalAmount, pricing.oneTime.currency)}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-600">One-time fee</p>
+                      </div>
+                    </label>
+
+                    {/* Subscription Payment Option */}
+                    <label className="flex items-start gap-4 p-4 border-2 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors"
+                      style={{ 
+                        borderColor: paymentType === 'subscription' ? '#f97316' : '#e5e7eb',
+                        backgroundColor: paymentType === 'subscription' ? '#fff7ed' : 'transparent',
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        name="paymentType"
+                        value="subscription"
+                        checked={paymentType === 'subscription'}
+                        onChange={() => handlePaymentTypeChange('subscription')}
+                        className="mt-1 w-5 h-5 text-orange-500"
+                      />
+                      <div className="flex-1">
+                        <div className="mb-2">
+                          <span className="text-sm text-gray-600">12x </span>
+                          <span className="text-2xl font-bold text-gray-900">
+                            {formatAmount(pricing.subscription.monthlyAmount, pricing.subscription.currency)}/month
+                          </span>
+                          {pricing.subscription.originalMonthlyAmount && (
+                            <span className="text-lg text-gray-500 line-through ml-2">
+                              {formatAmount(pricing.subscription.originalMonthlyAmount, pricing.subscription.currency)}/month
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-sm text-gray-600">
+                            {formatAmount(pricing.subscription.totalAmount, pricing.subscription.currency)}
+                          </span>
+                          {pricing.subscription.originalTotalAmount && (
+                            <span className="text-sm text-gray-500 line-through">
+                              {formatAmount(pricing.subscription.originalTotalAmount, pricing.subscription.currency)}
+                            </span>
+                          )}
+                          <span className="text-sm text-gray-600 ml-2">installment plan</span>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              )}
+
+              {/* Total Due Today Summary */}
+              {pricing && (
+                <div className="bg-gray-900/50 rounded-xl p-6 border border-gray-800 mb-6">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <p className="text-gray-300">Total due today</p>
+                      <button className="text-sm text-orange-500 hover:text-orange-400 mt-1">
+                        View order details
+                      </button>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-2xl font-bold text-white">
+                        {formatAmount(getTotalDueToday(), currency)} {currency.toUpperCase()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {(!pricing || loading) && (
                 <div className="bg-gray-900/50 rounded-xl p-6 border border-gray-800">
-                  <p className="text-gray-300">Loading checkout...</p>
+                  <p className="text-gray-300">
+                    {!pricing ? 'Loading pricing...' : 'Loading checkout...'}
+                  </p>
                 </div>
               )}
 
@@ -86,11 +251,13 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              {clientSecret && !loading && (
+              {clientSecret && !loading && pricing && (
                 <EmbeddedCheckout
                   clientSecret={clientSecret}
-                  amount={amount}
+                  amount={getTotalDueToday()}
                   currency={currency}
+                  paymentType={paymentType}
+                  priceId={paymentType === 'one-time' ? pricing.oneTime.priceId : pricing.subscription.priceId}
                 />
               )}
             </div>
@@ -167,4 +334,3 @@ export default function CheckoutPage() {
     </main>
   )
 }
-
