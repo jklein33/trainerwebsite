@@ -70,7 +70,7 @@ export function Packages() {
         throw new Error('Failed to initialize payment. Please refresh the page.')
       }
 
-      const { error } = await stripe.redirectToCheckout({ sessionId: data.sessionId })
+      const { error } = await (stripe as any).redirectToCheckout({ sessionId: data.sessionId })
       
       if (error) {
         throw new Error(error.message || 'Failed to redirect to checkout')
