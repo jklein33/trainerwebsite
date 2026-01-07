@@ -2,13 +2,14 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Stripe from "stripe"
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY is not set in environment variables')
+function getStripe() {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error('STRIPE_SECRET_KEY is not set in environment variables')
+  }
+  return new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2025-02-24.acacia',
+  })
 }
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2025-02-24.acacia',
-})
 
 export default async function SuccessPage({
   searchParams,
@@ -31,6 +32,7 @@ export default async function SuccessPage({
   // Verify payment intent if present
   if (paymentIntentId) {
     try {
+      const stripe = getStripe()
       const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)
       if (paymentIntent.status === 'succeeded' || redirectStatus === 'succeeded') {
         paymentStatus = 'success'
@@ -47,6 +49,7 @@ export default async function SuccessPage({
   // Verify checkout session if present
   if (sessionId && paymentStatus === 'unknown') {
     try {
+      const stripe = getStripe()
       const session = await stripe.checkout.sessions.retrieve(sessionId)
       if (session.payment_status === 'paid') {
         paymentStatus = 'success'

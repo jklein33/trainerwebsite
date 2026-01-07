@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY is not set in environment variables')
+function getStripe() {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error('STRIPE_SECRET_KEY is not set in environment variables')
+  }
+  return new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2025-02-24.acacia',
+  })
 }
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2025-02-24.acacia',
-})
 
 // Price IDs
 const ONETIME_PRICE_ID = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID || 'price_1Smi6GKx2xkrGl8oaMCLcwNM'
@@ -15,6 +16,8 @@ const SUBSCRIPTION_PRICE_ID = 'price_1SmwLNKx2xkrGl8olwl91cwM'
 
 export async function GET(request: NextRequest) {
   try {
+    const stripe = getStripe()
+    
     // Fetch both prices from Stripe
     const [oneTimePrice, subscriptionPrice] = await Promise.all([
       stripe.prices.retrieve(ONETIME_PRICE_ID),

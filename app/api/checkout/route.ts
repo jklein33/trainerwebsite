@@ -1,20 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY is not set in environment variables')
+function getStripe() {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error('STRIPE_SECRET_KEY is not set in environment variables')
+  }
+  return new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2025-02-24.acacia',
+  })
 }
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2025-02-24.acacia',
-})
-
 // Allowed price IDs for security (validate against your actual prices)
-const ALLOWED_PRICE_IDS = [
-  process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
-].filter(Boolean) as string[]
+function getAllowedPriceIds() {
+  return [
+    process.env.NEXT_PUBLIC_STRIPE_PRICE_ID,
+  ].filter(Boolean) as string[]
+}
 
 export async function POST(request: NextRequest) {
+  const stripe = getStripe()
+  const ALLOWED_PRICE_IDS = getAllowedPriceIds()
   try {
     const { priceId } = await request.json()
 
