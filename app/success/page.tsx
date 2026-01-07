@@ -51,8 +51,8 @@ export default async function SuccessPage({
       if (session.payment_status === 'paid') {
         paymentStatus = 'success'
         paymentDetails = {
-          amount: session.amount_total,
-          currency: session.currency,
+          amount: session.amount_total ?? undefined,
+          currency: session.currency ?? undefined,
         }
       }
     } catch (error) {
