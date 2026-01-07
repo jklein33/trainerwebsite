@@ -288,7 +288,7 @@ export default function CheckoutPage() {
 
                 <div className="bg-gray-900/50 rounded-xl p-6 border border-gray-800">
                   <p className="text-white italic mb-4 text-lg">
-                    &quot;The DAWG method saved me hours every week. I&apos;m in the best shape of my life and more productive at work than ever. Best investment I&apos;ve made in myself.&quot;
+                    &quot;The Dawg Strength method saved me hours every week. I&apos;m in the best shape of my life and more productive at work than ever. Best investment I&apos;ve made in myself.&quot;
                   </p>
                   <p className="text-orange-500 font-semibold">— Product Manager</p>
                 </div>

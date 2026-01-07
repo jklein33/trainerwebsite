@@ -112,7 +112,7 @@ export default function DawgStrengthProgram() {
             </p>
 
             <p className="text-3xl text-gray-400 font-semibold text-orange-400">
-              The DAWG method is what I wish I&apos;d had for myself - a proven, curated system to give you back your body, your brain and your productivity in record time.
+              The Dawg Strength method is what I wish I&apos;d had for myself - a proven, curated system to give you back your body, your brain and your productivity in record time.
             </p>
           </div>
 
@@ -171,12 +171,13 @@ export default function DawgStrengthProgram() {
               <p className="text-lg text-orange-500 leading-relaxed mb-4 font-semibold">
                 Most people who want to do it on their own are just scared that they won&apos;t get results from their investment - and that makes total sense.
               </p>
-              <p className="text-lg text-gray-300 leading-relaxed mb-3">
+              <p className="text-lg text-gray-300 leading-relaxed mb-3 font-semibold underline">
                 Ask yourself these questions:
               </p>
               <ul className="text-lg text-gray-300 leading-relaxed space-y-2 list-disc list-inside ml-4">
-                <li>Do you make good decisions, generally?</li>
-                <li>What would it take to trust yourself?</li>
+                <li>Be honest with yourself - do you have any idea what you are doing in the gym and in the kitchen?</li>
+                <li>Do you have the time and bandwidth to research and figure it out on your own?</li>
+                <li>Do you have the discipline and confidence to show up for yourself?</li>
                 <li>Can you imagine how you&apos;ll show up differently when you&apos;ve made an investment in your health versus doing it alone?</li>
                 <li>How would it feel to allow yourself to be supported, the same way you support others?</li>
               </ul>
@@ -337,7 +338,7 @@ export default function DawgStrengthProgram() {
               </h2>
               <div className="space-y-4 text-lg leading-relaxed text-orange-300">
                 <p className="text-white font-semibold">
-                  James Klein is a certified personal trainer, nutrition coach and expert advisor for publications like Fit & Well. He has helped dozens of clients lose weight, get stronger and lead healhier lives. The nickname &quot;KleinDawg&quot; was won on the high school Lacrosse field, where he was underestimated - until he let out his inner Dawg and claimed the respect he deserved.
+                  James Klein is a certified personal trainer, nutrition coach and expert advisor for publications like Fit & Well. He has helped dozens of clients lose weight, get stronger and lead healthier lives. The nickname &quot;KleinDawg&quot; was won on the high school Lacrosse field, where he was underestimated - until he let out his inner Dawg and claimed the respect he deserved.
                 </p>
                 <p>
                   A lifelong hockey player, he played ACHA Divison III hockey while pursuing his degree in Computer Information Systems. Like many athletes, he felt lost when his collegiate career ended - drowning himself in booze and food until he discovered powerlifting and bodybuilding.
