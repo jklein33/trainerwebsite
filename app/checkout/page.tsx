@@ -135,20 +135,50 @@ export default function CheckoutPage() {
             {/* Left Column: Payment Plans & Checkout Form */}
             <div>
               <div className="mb-8">
-                <h1 className="text-4xl font-bold text-orange-500 mb-4">
+                <h1 className="text-4xl font-bold text-orange-500 mb-2">
                   Dawg Strength (Beta Group)
                 </h1>
+                <p className="text-red-500 text-lg italic font-semibold">
+                  Discounted from $12,000/year
+                </p>
+              </div>
+
+              {/* Trust Builders - Moved to top */}
+              <div className="bg-gray-900/50 rounded-xl p-6 border border-gray-800 mb-6">
+                <h3 className="text-xl font-bold text-white mb-4">What You Get</h3>
+                <ul className="space-y-3 text-gray-300">
+                  <li className="flex items-start gap-3">
+                    <span className="text-orange-500 font-bold">✓</span>
+                    <span>Save 5+ hours per week with training programs that deliver results with speed</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-orange-500 font-bold">✓</span>
+                    <span>Effortless nutrition that works—no meal prep stress or guesswork</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-orange-500 font-bold">✓</span>
+                    <span>Fast-track your results with proven methods, no trial and error</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-orange-500 font-bold">✓</span>
+                    <span>Peace of mind knowing you&apos;re on the right track, every step of the way</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-orange-500 font-bold">✓</span>
+                    <span>Get results faster with a system that&apos;s already worked for 20+ clients</span>
+                  </li>
+                </ul>
               </div>
 
               {/* Payment Plan Selector */}
               {pricing && (
-                <div className="bg-white rounded-2xl p-6 mb-6">
+                <div className="bg-gray-900/50 rounded-2xl p-6 mb-6 border border-gray-800">
                   <div className="space-y-4">
                     {/* One-time Payment Option */}
-                    <label className="flex items-start gap-4 p-4 border-2 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors"
+                    <label className="flex items-start gap-4 p-4 border-2 rounded-xl cursor-pointer hover:bg-gray-800/50 transition-colors"
                       style={{ 
-                        borderColor: paymentType === 'one-time' ? '#f97316' : '#e5e7eb',
-                        backgroundColor: paymentType === 'one-time' ? '#fff7ed' : 'transparent',
+                        borderColor: paymentType === 'one-time' ? '#f97316' : '#374151',
+                        backgroundColor: paymentType === 'one-time' ? 'rgba(249, 115, 22, 0.1)' : 'transparent',
                       }}
                     >
                       <input
@@ -161,24 +191,24 @@ export default function CheckoutPage() {
                       />
                       <div className="flex-1">
                         <div className="flex items-baseline gap-2 mb-1">
-                          <span className="text-2xl font-bold text-gray-900">
+                          <span className="text-2xl font-bold text-white">
                             {formatAmount(pricing.oneTime.amount, pricing.oneTime.currency)}
                           </span>
                           {pricing.oneTime.originalAmount && (
-                            <span className="text-lg text-gray-500 line-through">
+                            <span className="text-lg text-gray-400 line-through">
                               {formatAmount(pricing.oneTime.originalAmount, pricing.oneTime.currency)}
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-gray-600">One-time fee</p>
+                        <p className="text-sm text-gray-300">One-time fee</p>
                       </div>
                     </label>
 
                     {/* Subscription Payment Option */}
-                    <label className="flex items-start gap-4 p-4 border-2 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors"
+                    <label className="flex items-start gap-4 p-4 border-2 rounded-xl cursor-pointer hover:bg-gray-800/50 transition-colors"
                       style={{ 
-                        borderColor: paymentType === 'subscription' ? '#f97316' : '#e5e7eb',
-                        backgroundColor: paymentType === 'subscription' ? '#fff7ed' : 'transparent',
+                        borderColor: paymentType === 'subscription' ? '#f97316' : '#374151',
+                        backgroundColor: paymentType === 'subscription' ? 'rgba(249, 115, 22, 0.1)' : 'transparent',
                       }}
                     >
                       <input
@@ -191,26 +221,26 @@ export default function CheckoutPage() {
                       />
                       <div className="flex-1">
                         <div className="mb-2">
-                          <span className="text-sm text-gray-600">12x </span>
-                          <span className="text-2xl font-bold text-gray-900">
+                          <span className="text-sm text-gray-300">12x </span>
+                          <span className="text-2xl font-bold text-white">
                             {formatAmount(pricing.subscription.monthlyAmount, pricing.subscription.currency)}/month
                           </span>
                           {pricing.subscription.originalMonthlyAmount && (
-                            <span className="text-lg text-gray-500 line-through ml-2">
+                            <span className="text-lg text-gray-400 line-through ml-2">
                               {formatAmount(pricing.subscription.originalMonthlyAmount, pricing.subscription.currency)}/month
                             </span>
                           )}
                         </div>
                         <div className="flex items-baseline gap-2">
-                          <span className="text-sm text-gray-600">
+                          <span className="text-sm text-gray-300">
                             {formatAmount(pricing.subscription.totalAmount, pricing.subscription.currency)}
                           </span>
                           {pricing.subscription.originalTotalAmount && (
-                            <span className="text-sm text-gray-500 line-through">
+                            <span className="text-sm text-gray-400 line-through">
                               {formatAmount(pricing.subscription.originalTotalAmount, pricing.subscription.currency)}
                             </span>
                           )}
-                          <span className="text-sm text-gray-600 ml-2">installment plan</span>
+                          <span className="text-sm text-gray-300 ml-2">installment plan</span>
                         </div>
                       </div>
                     </label>
@@ -223,10 +253,7 @@ export default function CheckoutPage() {
                 <div className="bg-gray-900/50 rounded-xl p-6 border border-gray-800 mb-6">
                   <div className="flex justify-between items-center">
                     <div>
-                      <p className="text-gray-300">Total due today</p>
-                      <button className="text-sm text-orange-500 hover:text-orange-400 mt-1">
-                        View order details
-                      </button>
+                      <p className="text-gray-300 text-lg font-semibold">Total due today</p>
                     </div>
                     <div className="text-right">
                       <p className="text-2xl font-bold text-white">
@@ -266,59 +293,51 @@ export default function CheckoutPage() {
             <div className="space-y-8">
               <div>
                 <h2 className="text-3xl font-bold text-white mb-6">
-                  Join Hundreds of Successful Clients
+                  See What Our Clients Are Saying
                 </h2>
               </div>
 
               {/* Testimonials */}
               <div className="space-y-6">
                 <div className="bg-gray-900/50 rounded-xl p-6 border border-gray-800">
-                  <p className="text-white italic mb-4 text-lg">
-                    &quot;I lost 25 pounds and built a physique I&apos;m proud of. The confidence I gained translated directly to my work—I went from being overlooked for promotions to leading major projects. The results are real.&quot;
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-yellow-400 text-xl">⭐⭐⭐⭐⭐</span>
+                  </div>
+                  <p className="text-orange-500 italic mb-4 text-lg font-semibold">
+                    &quot;I started my Dawg Strength fitness program a few weeks ago with James Klein. Under his direction, I&apos;ve seen desired weight loss and increased physical endurance. Thanks to James for his patience and instruction. I&apos;m reaching my health goals!&quot;
                   </p>
-                  <p className="text-orange-500 font-semibold">— Senior Data Engineer</p>
+                  <p className="text-orange-500 font-semibold">— Tom P.</p>
                 </div>
 
                 <div className="bg-gray-900/50 rounded-xl p-6 border border-gray-800">
-                  <p className="text-white italic mb-4 text-lg">
-                    &quot;After losing 20 pounds and building a fit body, I finally have the confidence to speak up in meetings, negotiate better salaries, and take on bigger challenges. The transformation gave me that edge.&quot;
-                  </p>
-                  <p className="text-orange-500 font-semibold">— Software Architect</p>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-yellow-400 text-xl">⭐⭐⭐⭐⭐</span>
+                  </div>
+                  <div className="text-orange-500 italic mb-4 text-lg font-semibold space-y-3">
+                    <p>
+                      &quot;I&apos;ve had the pleasure of working with James Klein as my coach. He has been an excellent communicator and has a passion for fitness and delivering results. James shows that I am not just another client, but that he cares and wants me to succeed.
+                    </p>
+                    <p>
+                      He shares valuable knowledge on nutrition and supplementation based on facts and evidence of what your individual body needs. While working with James I was able to make quick progress with my squats, as far as form and weight.&quot;
+                    </p>
+                  </div>
+                  <p className="text-orange-500 font-semibold">— Teta L.</p>
                 </div>
 
                 <div className="bg-gray-900/50 rounded-xl p-6 border border-gray-800">
-                  <p className="text-white italic mb-4 text-lg">
-                    &quot;The Dawg Strength method saved me hours every week. I&apos;m in the best shape of my life and more productive at work than ever. Best investment I&apos;ve made in myself.&quot;
-                  </p>
-                  <p className="text-orange-500 font-semibold">— Product Manager</p>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-yellow-400 text-xl">⭐⭐⭐⭐⭐</span>
+                  </div>
+                  <div className="text-orange-500 italic mb-4 text-lg font-semibold space-y-3">
+                    <p>
+                      &quot;James gave me the confidence and belief in myself to take the first step towards achieving my dream body. He motivated me and gave me hope for success. I trusted the Dawg Strength method and I got the results I wanted.
+                    </p>
+                    <p>
+                      I feel good about myself and now I have the tools to succeed on my own. James cares about me as a person and took joy in watching me succeed, and that was an amazing feeling.&quot;
+                    </p>
+                  </div>
+                  <p className="text-orange-500 font-semibold">— Tracie N.</p>
                 </div>
-              </div>
-
-              {/* Trust Builders */}
-              <div className="bg-gray-900/50 rounded-xl p-6 border border-gray-800">
-                <h3 className="text-xl font-bold text-white mb-4">What You Get</h3>
-                <ul className="space-y-3 text-gray-300">
-                  <li className="flex items-start gap-3">
-                    <span className="text-orange-500 font-bold">✓</span>
-                    <span>Personalized training plans tailored to your schedule</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-orange-500 font-bold">✓</span>
-                    <span>Nutrition guidance that fits your lifestyle</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-orange-500 font-bold">✓</span>
-                    <span>Access to exclusive content and resources</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-orange-500 font-bold">✓</span>
-                    <span>Ongoing support and accountability</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-orange-500 font-bold">✓</span>
-                    <span>Proven system used by 20+ successful clients</span>
-                  </li>
-                </ul>
               </div>
 
               {/* Security Badge */}

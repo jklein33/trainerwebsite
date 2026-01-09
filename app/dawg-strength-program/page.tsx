@@ -1,7 +1,27 @@
+"use client"
+
 import Image from "next/image"
 import { CheckoutButton } from "@/components/checkout-button"
+import { useState } from "react"
 
 export default function DawgStrengthProgram() {
+  const [currentSlide, setCurrentSlide] = useState(0)
+  
+  const transformations = [
+    { src: "/images/transform1.png", alt: "Client transformation 1" },
+    { src: "/images/transform2.png", alt: "Client transformation 2" },
+    { src: "/images/transform3.png", alt: "Client transformation 3" },
+    { src: "/images/transform4.png", alt: "Client transformation 4" },
+    { src: "/images/transform5.png", alt: "Client transformation 5" },
+  ]
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % transformations.length)
+  }
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + transformations.length) % transformations.length)
+  }
   return (
     <main className="min-h-screen bg-black">
       {/* SECTION 1: ACTION TAKING HEADLINE */}
@@ -168,7 +188,7 @@ export default function DawgStrengthProgram() {
               <p className="text-lg text-gray-300 leading-relaxed mb-6 italic">
                 Those men aren&apos;t willing to waste any time &quot;figuring it out,&quot; because they know it comes at a cost - to them, to their families and to their productivity at work. 
               </p>
-              <p className="text-lg text-orange-500 leading-relaxed mb-4 font-semibold">
+              <p className="text-lg text-orange-400 leading-relaxed mb-4 font-semibold">
                 Most people who want to do it on their own are just scared that they won&apos;t get results from their investment - and that makes total sense.
               </p>
               <p className="text-lg text-gray-300 leading-relaxed mb-3 font-semibold underline">
@@ -204,7 +224,7 @@ export default function DawgStrengthProgram() {
               <p className="text-lg text-gray-300 leading-relaxed mb-4">
                 DAWG Strength is the whole solution to help you lose 30 lbs without wasting time, so it&apos;s the only option for working with me virtually.
               </p>
-              <p className="text-lg font-semibold text-gray-300 leading-relaxed mb-4 italic underline">
+              <p className="text-lg text-orange-400 font-semibold text-gray-300 leading-relaxed mb-4 italic underline">
                 No one ever budgets for a coaching program.
               </p>
               <p className="text-lg text-gray-300 leading-relaxed mb-4">
@@ -280,39 +300,6 @@ export default function DawgStrengthProgram() {
       {/* SPACER */}
       <div className="h-16"></div>
 
-      {/* SECTION 5: AUTHORITY BUILDER TESTIMONIALS */}
-      <section className="bg-black px-6 py-16 lg:px-12 lg:py-24">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid gap-8 md:grid-cols-2 mb-12">
-            <div className="bg-gray-900/50 rounded-2xl p-8 border border-gray-800">
-              <p className="text-white italic mb-4 text-lg">
-                &quot;I lost 25 pounds and built a physique I&apos;m proud of. The confidence I gained translated directly to my work—I went from being overlooked for promotions to leading major projects. The results are real.&quot;
-              </p>
-              <p className="text-orange-500 font-semibold">— Senior Data Engineer</p>
-            </div>
-            
-            <div className="bg-gray-900/50 rounded-2xl p-8 border border-gray-800">
-              <p className="text-white italic mb-4 text-lg">
-                &quot;After losing 20 pounds and building a fit body, I finally have the confidence to speak up in meetings, negotiate better salaries, and take on bigger challenges. The transformation gave me that edge.&quot;
-              </p>
-              <p className="text-orange-500 font-semibold">— Software Architect</p>
-            </div>
-          </div>
-
-          {/* Action Button */}
-          <div className="text-center">
-            <CheckoutButton 
-              size="lg" 
-              className="bg-orange-500 text-white hover:bg-orange-600 text-lg sm:text-xl px-12 py-8 rounded-xl font-bold shadow-lg"
-            >
-              CREATE YOUR OWN SUCCESS STORY
-            </CheckoutButton>
-          </div>
-        </div>
-      </section>
-
-      {/* SPACER */}
-      <div className="h-16"></div>
 
       {/* SECTION 6: AUTHORITY BUILDER BIO */}
       <section className="bg-black px-6 py-16 lg:px-12 lg:py-24">
@@ -349,6 +336,71 @@ export default function DawgStrengthProgram() {
                 <p>
                   James is no stranger to adversity; DAWG Strength was his anchor through massive life events, like a near-deadly car accident, the mayhem of COVID, the gain and loss of millions of dollars and the premature loss of his mom.
                 </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Photo Gallery Carousel */}
+          <div className="mt-16">
+            <h2 className="text-3xl font-bold text-white mb-8 text-center">
+              James's Personal Transformations
+            </h2>
+            <div className="relative max-w-4xl mx-auto">
+              {/* Carousel Container */}
+              <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-gray-900">
+                {transformations.map((transform, index) => (
+                  <div
+                    key={index}
+                    className={`absolute inset-0 transition-opacity duration-500 ${
+                      index === currentSlide ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  >
+                    <Image
+                      src={transform.src}
+                      alt={transform.alt}
+                      fill
+                      className="object-contain"
+                      sizes="(min-width: 1024px) 896px, (min-width: 640px) 80vw, 100vw"
+                      priority={index === currentSlide}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {/* Navigation Buttons */}
+              <button
+                onClick={prevSlide}
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black/90 text-white p-3 rounded-full transition-all duration-200 z-10"
+                aria-label="Previous image"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button
+                onClick={nextSlide}
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black/90 text-white p-3 rounded-full transition-all duration-200 z-10"
+                aria-label="Next image"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+
+              {/* Dots Indicator */}
+              <div className="flex justify-center gap-2 mt-6">
+                {transformations.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentSlide(index)}
+                    className={`h-2 rounded-full transition-all duration-200 ${
+                      index === currentSlide
+                        ? 'bg-orange-500 w-8'
+                        : 'bg-gray-600 w-2 hover:bg-gray-500'
+                    }`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
               </div>
             </div>
           </div>
