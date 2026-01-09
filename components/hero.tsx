@@ -5,8 +5,21 @@ import { Check } from "lucide-react"
 
 export function Hero() {
   return (
-    <section id="hero" className="relative flex bg-black px-6 pt-4 lg:px-12 lg:pt-6">
-      <div className="container mx-auto grid gap-8 lg:grid-cols-[2fr_1fr] lg:gap-16">
+    <section id="hero" className="relative bg-black px-6 pt-4 lg:px-12 lg:pt-6 overflow-hidden py-12 flex items-start">
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/images/ambitious-studio-rick-barrett-wZlsHihO2g4-unsplash.jpg"
+          alt="Gym background"
+          fill
+          className="object-cover"
+          priority
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-black/75" />
+      </div>
+      
+      <div className="container mx-auto grid gap-8 lg:grid-cols-[1fr_1fr] lg:gap-16 lg:items-start relative z-10 w-full pt-12 pb-12">
         {/* Left Content */}
         <div className="flex flex-col space-y-8">
           <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl">
@@ -40,15 +53,15 @@ export function Hero() {
         </div>
         
         {/* Right Image */}
-        <div className="relative flex items-center justify-center lg:justify-end">
-          <div className="relative h-[600px] w-full max-w-md overflow-hidden rounded-lg sm:h-[700px] lg:h-[800px] xl:h-[900px] bg-black">
+        <div className="relative flex items-center justify-center">
+          <div className="relative w-full max-w-md aspect-[4/5] overflow-hidden rounded-2xl">
             <Image
-              src="/images/james_pose.jpg"
+              src="/images/athena_dawg.jpeg"
               alt="Coach posing and flexing muscles at Dawg Strength"
               fill
               priority
-              className="object-contain object-center"
-              sizes="(min-width: 1024px) 500px, 70vw"
+              className="object-cover object-center rounded-2xl"
+              sizes="(min-width: 1024px) 400px, 100vw"
             />
           </div>
         </div>

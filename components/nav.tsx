@@ -15,10 +15,8 @@ export function Nav() {
 
   const navLinks = [
     { href: "#services", label: "Services" },
-    { href: "#client-stories", label: "Client Stories" },
     { href: "#about", label: "About" },
     { href: "#contact", label: "Contact" },
-    { href: "#packages", label: "Packages" },
   ]
 
   return (

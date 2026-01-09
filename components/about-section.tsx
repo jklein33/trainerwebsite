@@ -27,14 +27,14 @@ export function AboutSection() {
               ABOUT JAMES
             </p>
             <h2 className="text-4xl font-bold text-white sm:text-5xl lg:text-6xl">
-              Head Trainer and Coach
+              Head Coach
             </h2>
             <div className="space-y-4 text-base leading-relaxed text-white sm:text-lg">
               <p>
                 James started as a fat guy who wanted to get in shape. After years of playing hockey and lacrosse, he struggled to stay fit. That&apos;s when he discovered powerlifting and bodybuilding, which changed his life completely.
               </p>
               <p>
-                Having worked a 9-to-5 job in IT Consulting, James understands the challenges of fitting fitness into a busy schedule. His mission is to help and inspire others to become the best version of themselves, just as he did.
+                Having worked a 9-to-5 job in Data Consulting, James understands the challenges of fitting fitness into a busy schedule. His mission is to help and inspire others to become the best version of themselves, just as he did.
               </p>
             </div>
             <Button 

@@ -1,28 +1,32 @@
 "use client"
 
 import Image from "next/image"
+import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { Check, Monitor, User } from "lucide-react"
 
 const services = [
   {
     icon: Monitor,
     title: "The Dawg Strength Method",
-    description: "Perfect for gym-goers who will benefit from the guidance and counsel of an experienced fitness professional without the need to have him present as a personal trainer on the gym floor.",
+    description: "The Ultimate Program for Busy IT Professionals who want to lose 30+ pounds, without wasting time in the gym and kitchen.",
     features: [
-      "Personalized Training Plans",
-      "Nutritional Advice",
+      "Effortless Nutrition",
+      "Efficient Training Programs",
       "Access to Exclusive Content",
+      "Network and community of like-minded individuals",
     ],
   },
   {
     icon: User,
     title: "Personal Training (VA Locals only)",
-    description: "Traditional boots on the ground personal training in the gym twice a week for eight weeks. Designed for those becoming more comfortable in the gym and making it a habit.",
+    description: "In person training for those who prefer the personal touch of a coach in the gym.",
     features: [
-      "Structured Workout Routines",
-      "Direct Supervision",
-      "Immediate Feedback",
+      "Transform your body faster and reach your goals in record time",
+      "Build the strength and physique you've always wanted without setbacks",
+      "See visible results week after week with guaranteed progress",
+      "Achieve your dream body with the consistency that actually works",
     ],
   },
 ]
@@ -54,7 +58,7 @@ export function Services() {
           {services.map((service, index) => {
             const Icon = service.icon
             return (
-              <Card key={index} className="border-gray-800 bg-gray-900/80 backdrop-blur-sm shadow-lg">
+              <Card key={index} className="border-gray-800 bg-gray-900/80 backdrop-blur-sm shadow-lg flex flex-col">
                 <CardHeader className="space-y-4">
                   <div className="mb-2">
                     <Icon className="h-8 w-8 text-orange-500" />
@@ -63,7 +67,7 @@ export function Services() {
                     {service.title}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-6 flex flex-col flex-grow">
                   <CardDescription className="text-base leading-relaxed text-gray-300">
                     {service.description}
                   </CardDescription>
@@ -74,6 +78,27 @@ export function Services() {
                         <span className="text-base text-white">{feature}</span>
                       </div>
                     ))}
+                  </div>
+                  <div className="mt-auto pt-4">
+                    {index === 0 ? (
+                      <Link href="/dawg-strength-program">
+                        <Button 
+                          size="lg" 
+                          className="w-full bg-orange-500 text-white hover:bg-orange-600 text-base sm:text-lg px-8 py-6 rounded-lg font-medium shadow-lg"
+                        >
+                          Find the Dawg
+                        </Button>
+                      </Link>
+                    ) : (
+                      <a href="#" onClick={(e) => e.preventDefault()}>
+                        <Button 
+                          size="lg" 
+                          className="w-full bg-orange-500 text-white hover:bg-orange-600 text-base sm:text-lg px-8 py-6 rounded-lg font-medium shadow-lg"
+                        >
+                          Start Training
+                        </Button>
+                      </a>
+                    )}
                   </div>
                 </CardContent>
               </Card>
