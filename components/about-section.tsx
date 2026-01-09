@@ -37,12 +37,12 @@ export function AboutSection() {
                 Having worked a 9-to-5 job in Data Consulting, James understands the challenges of fitting fitness into a busy schedule. His mission is to help and inspire others to become the best version of themselves, just as he did.
               </p>
             </div>
-            <Button 
+            {/* <Button 
               size="lg" 
               className="w-fit bg-orange-500 text-white hover:bg-orange-600 text-base sm:text-lg px-8 py-6 rounded-lg font-medium shadow-lg"
             >
               Book a session
-            </Button>
+            </Button> */}
           </div>
         </div>
       </div>
