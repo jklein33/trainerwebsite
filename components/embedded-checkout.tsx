@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js"
 import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 if (!publishableKey) {
@@ -27,6 +28,7 @@ function CheckoutForm({ clientSecret, amount, currency, paymentType = 'one-time'
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [email, setEmail] = useState<string>('')
+  const [termsAccepted, setTermsAccepted] = useState(false)
 
   // Debug: Log available payment methods
   useEffect(() => {
@@ -62,6 +64,13 @@ function CheckoutForm({ clientSecret, amount, currency, paymentType = 'one-time'
 
     setLoading(true)
     setError(null)
+
+    // Validate terms are accepted
+    if (!termsAccepted) {
+      setError('You must accept the Terms and Services to proceed')
+      setLoading(false)
+      return
+    }
 
     // Validate email is provided
     if (!email || !email.includes('@')) {
@@ -207,11 +216,36 @@ function CheckoutForm({ clientSecret, amount, currency, paymentType = 'one-time'
           </div>
         )}
 
+        {/* Terms and Services Checkbox */}
+        <div className="mb-4">
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={(e) => setTermsAccepted(e.target.checked)}
+              required
+              className="mt-1 h-5 w-5 rounded border-gray-600 bg-gray-800 text-orange-500 focus:ring-2 focus:ring-orange-500 focus:ring-offset-0 focus:ring-offset-gray-900"
+            />
+            <span className="text-sm text-gray-300">
+              I agree to the{" "}
+              <Link 
+                href="/terms" 
+                target="_blank"
+                className="text-orange-500 hover:text-orange-600 underline font-semibold"
+                onClick={(e) => e.stopPropagation()}
+              >
+                Terms and Services
+              </Link>
+              <span className="text-red-500 ml-1">*</span>
+            </span>
+          </label>
+        </div>
+
         <Button
           type="submit"
-          disabled={!stripe || loading}
+          disabled={!stripe || loading || !termsAccepted}
           size="lg"
-          className="w-full bg-orange-500 text-white hover:bg-orange-600 text-lg px-8 py-6 rounded-xl font-bold shadow-lg"
+          className="w-full bg-orange-500 text-white hover:bg-orange-600 disabled:bg-gray-700 disabled:text-gray-400 disabled:cursor-not-allowed text-lg px-8 py-6 rounded-xl font-bold shadow-lg transition-colors"
         >
           {loading ? 'Processing...' : `Pay ${formatAmount(amount, currency)}`}
         </Button>

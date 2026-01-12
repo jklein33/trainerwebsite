@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { EmbeddedCheckout } from "@/components/embedded-checkout"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 
 // Price IDs
 const ONETIME_PRICE_ID = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID || 'price_1Smi6GKx2xkrGl8oaMCLcwNM'
@@ -288,19 +287,6 @@ export default function CheckoutPage() {
                   priceId={paymentType === 'one-time' ? pricing.oneTime.priceId : pricing.subscription.priceId}
                 />
               )}
-
-              {/* Terms and Services Link */}
-              <div className="mt-6 text-center">
-                <p className="text-gray-400 text-sm">
-                  By proceeding, you agree to our{" "}
-                  <Link 
-                    href="/terms" 
-                    className="text-orange-500 hover:text-orange-600 underline font-semibold"
-                  >
-                    Terms and Services
-                  </Link>
-                </p>
-              </div>
             </div>
 
             {/* Right Column: Testimonials & Trust Builders */}
