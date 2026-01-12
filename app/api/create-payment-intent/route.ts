@@ -94,6 +94,7 @@ export async function POST(request: NextRequest) {
       },
       automatic_payment_methods: {
         enabled: true,
+        allow_redirects: 'always', // Enable redirect-based payment methods like PayPal, Klarna, etc.
       },
       receipt_email: undefined, // Will be collected from PaymentElement
     })

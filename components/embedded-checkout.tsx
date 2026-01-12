@@ -28,9 +28,28 @@ function CheckoutForm({ clientSecret, amount, currency, paymentType = 'one-time'
   const [error, setError] = useState<string | null>(null)
   const [email, setEmail] = useState<string>('')
 
+  // Debug: Log available payment methods
+  useEffect(() => {
+    if (elements) {
+      elements.fetchUpdates().then(() => {
+        const paymentElement = elements.getElement('payment')
+        if (paymentElement) {
+          paymentElement.on('ready', () => {
+            console.log('PaymentElement ready - all enabled payment methods should be visible')
+          })
+        }
+      })
+    }
+  }, [elements])
+
   const paymentElementOptions = {
     fields: {
       billingDetails: 'auto' as const,
+    },
+    // Explicitly enable wallet payment methods
+    wallets: {
+      applePay: 'auto' as const,
+      googlePay: 'auto' as const,
     },
   }
 

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { EmbeddedCheckout } from "@/components/embedded-checkout"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 // Price IDs
 const ONETIME_PRICE_ID = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID || 'price_1Smi6GKx2xkrGl8oaMCLcwNM'
@@ -287,6 +288,19 @@ export default function CheckoutPage() {
                   priceId={paymentType === 'one-time' ? pricing.oneTime.priceId : pricing.subscription.priceId}
                 />
               )}
+
+              {/* Terms and Services Link */}
+              <div className="mt-6 text-center">
+                <p className="text-gray-400 text-sm">
+                  By proceeding, you agree to our{" "}
+                  <Link 
+                    href="/terms" 
+                    className="text-orange-500 hover:text-orange-600 underline font-semibold"
+                  >
+                    Terms and Services
+                  </Link>
+                </p>
+              </div>
             </div>
 
             {/* Right Column: Testimonials & Trust Builders */}
@@ -337,6 +351,27 @@ export default function CheckoutPage() {
                     </p>
                   </div>
                   <p className="text-orange-500 font-semibold">— Tracie N.</p>
+                </div>
+
+                <div className="bg-gray-900/50 rounded-xl p-6 border border-gray-800">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-yellow-400 text-xl">⭐⭐⭐⭐⭐</span>
+                  </div>
+                  <div className="text-orange-500 italic mb-4 text-lg font-semibold space-y-3">
+                    <p>
+                      &quot;Before working with James, I battled chronic back pain, low motivation, and complete uncertainty about where to even begin. As a busy healthcare professional, I needed something realistic and sustainable.
+                    </p>
+                    <p>
+                      James created a completely customized program tailored to my schedule and goals. The results have been transformative—I&apos;m stronger, more confident, and free from constant back pain.
+                    </p>
+                    <p>
+                      What sets James apart is his deep expertise, unwavering accountability, and genuine encouragement. He has helped me stay consistent with both training and nutrition, while pushing me well beyond what I thought I was capable of. Now I actually look forward to my workouts!
+                    </p>
+                    <p>
+                      I wholeheartedly recommend James to anyone serious about making a lasting, positive change to their health and lifestyle.&quot;
+                    </p>
+                  </div>
+                  <p className="text-orange-500 font-semibold">— Hannah M.</p>
                 </div>
               </div>
 
