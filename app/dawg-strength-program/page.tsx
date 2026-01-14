@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { CheckoutButton } from "@/components/checkout-button"
+import { CalendlyEmbed } from "@/components/calendly-embed"
 import { useState } from "react"
 
 export default function DawgStrengthProgram() {
@@ -276,12 +277,12 @@ export default function DawgStrengthProgram() {
             </div>
             
             <div className="bg-gray-900/50 rounded-xl p-8 border border-gray-800">
-              <h3 className="text-2xl font-bold text-white mb-4">
-                Can I talk to James before Joining the program?
+              <h3 className="text-2xl font-bold text-white mb-6">
+                Book a call with James to learn more about the DAWG Strength program.
               </h3>
-              <p className="text-lg text-gray-300 leading-relaxed">
-                Yes, click this link to schedule an info call with James.
-              </p>
+              <div className="mt-4">
+                <CalendlyEmbed url="https://calendly.com/james-dawgstrength/dawg-strength-information-call" />
+              </div>
             </div>
           </div>
 
