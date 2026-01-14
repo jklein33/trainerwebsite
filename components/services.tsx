@@ -90,14 +90,14 @@ export function Services() {
                         </Button>
                       </Link>
                     ) : (
-                      <a href="#" onClick={(e) => e.preventDefault()}>
+                      <Link href="/personal-training">
                         <Button 
                           size="lg" 
                           className="w-full bg-orange-500 text-white hover:bg-orange-600 text-base sm:text-lg px-8 py-6 rounded-lg font-medium shadow-lg"
                         >
                           Start Training
                         </Button>
-                      </a>
+                      </Link>
                     )}
                   </div>
                 </CardContent>
