@@ -73,20 +73,23 @@ export default async function SuccessPage({
 
   return (
     <main className="min-h-screen bg-black flex items-center justify-center px-6">
-      <div className="max-w-md w-full text-center space-y-8">
+      <div className="max-w-2xl w-full text-center space-y-8">
         {paymentStatus === 'success' ? (
-          <div className="space-y-4">
+          <div className="space-y-6">
             <h1 className="text-4xl font-bold text-white sm:text-5xl">
               Payment Successful!
             </h1>
-            <p className="text-xl text-gray-300">
-              Thank you for your purchase. You will receive a confirmation email shortly.
-            </p>
-            {paymentDetails.amount && paymentDetails.currency && (
-              <p className="text-lg text-orange-500 font-semibold">
-                {formatAmount(paymentDetails.amount, paymentDetails.currency)}
+            <div className="space-y-4 text-left">
+              <p className="text-4xl text-gray-300">
+                Hello! Thank you for purchasing the Dawg Strength Program Beta Group.
               </p>
-            )}
+              <p className="text-lg text-orange-400 font-bold">
+                You will receive a series of emails shortly of documents that will need signatures before login information is provisioned.
+              </p>
+              <p className="text-2xl text-gray-300">
+                Since you are part of the beta group, you understand that the course materials are not completely built out yet. In the meantime, you will have access to our discord group, weekly group calls and module 1: Dawg Mindset, will be added shortly. Expect to have everything in the next 6-8 weeks.
+              </p>
+            </div>
           </div>
         ) : (
           <div className="space-y-4">
