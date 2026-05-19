@@ -24,11 +24,11 @@ export default function PersonalTraining() {
             {/* Left: Headline Content */}
             <div className="space-y-6">
               <p className="text-lrg font-semibold uppercase tracking-[0.3em] text-orange-500">
-                Personal Training · VA Locals Only
+                Personal Training/Online Coaching
               </p>
               <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
-                One-on-one personal training to get you strong, confident, and injury‑resilient.
-              </h1>
+                One-on-one personal training or online coaching to get you strong, confident, and injury‑resilient.
+              </h1> 
               <p className="text-lg leading-relaxed text-gray-300 sm:text-xl">
                 I help people get stronger, leaner, and more confident in the gym and in life.
                 I specialize in fat loss, stength training, lacrosse and hockey training, general athletic performance and assisted stretching.

@@ -20,8 +20,8 @@ const services = [
   },
   {
     icon: User,
-    title: "Personal Training (VA Locals only)",
-    description: "In person training for those who prefer the personal touch of a coach in the gym.",
+    title: "Personal Training/Online Coaching",
+    description: "In person training and online coaching for those who prefer the personal touch.",
     features: [
       "Transform your body faster and reach your goals in record time",
       "Build the strength and physique you've always wanted without setbacks",
