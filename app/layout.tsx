@@ -1,16 +1,53 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { Nav } from "@/components/nav";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const fkGrotesk = localFont({
+  src: [
+    {
+      path: "../fonts/FK Grotesk Trial/FKGroteskTrial-Thin.otf",
+      weight: "100",
+      style: "normal",
+    },
+    {
+      path: "../fonts/FK Grotesk Trial/FKGroteskTrial-Light.otf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../fonts/FK Grotesk Trial/FKGroteskTrial-Regular.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../fonts/FK Grotesk Trial/FKGroteskTrial-Medium.otf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../fonts/FK Grotesk Trial/FKGroteskTrial-Bold.otf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../fonts/FK Grotesk Trial/FKGroteskTrial-Black.otf",
+      weight: "900",
+      style: "normal",
+    },
+    {
+      path: "../fonts/FK Grotesk Trial/FKGroteskTrial-Italic.otf",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "../fonts/FK Grotesk Trial/FKGroteskTrial-BoldItalic.otf",
+      weight: "700",
+      style: "italic",
+    },
+  ],
+  variable: "--font-fk-grotesk",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -26,7 +63,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${fkGrotesk.variable} font-sans antialiased`}
       >
         <Nav />
         {children}

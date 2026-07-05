@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -12,18 +13,61 @@ export function ContactForm() {
     email: "",
     message: "",
   })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: 'success' | 'error' | null
+    message: string
+  }>({ type: null, message: '' })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission
-    console.log(formData)
+    setIsSubmitting(true)
+    setSubmitStatus({ type: null, message: '' })
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message')
+      }
+
+      setSubmitStatus({
+        type: 'success',
+        message: 'Message sent successfully! I\'ll get back to you soon.'
+      })
+      
+      // Reset form
+      setFormData({ name: "", email: "", message: "" })
+    } catch (error) {
+      setSubmitStatus({
+        type: 'error',
+        message: error instanceof Error ? error.message : 'Failed to send message. Please try again.'
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
-    <section id="contact" className="relative bg-black px-6 py-24 lg:px-12">
-      <div className="absolute inset-0 opacity-30">
-        {/* Placeholder for gym background image */}
-        <div className="h-full w-full bg-gradient-to-br from-gray-900 via-black to-gray-900" />
+    <section id="contact" className="relative overflow-hidden bg-black px-6 py-24 lg:px-12">
+      <div className="absolute inset-0">
+        <Image
+          src="/images/ambitious-studio-rick-barrett-1RNQ11ZODJM-unsplash.jpg"
+          alt="Gym interior with dumbbells and equipment background"
+          fill
+          className="object-cover object-center"
+          priority={false}
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-black/70" />
       </div>
       <div className="relative container mx-auto max-w-2xl">
         <div className="mb-12 text-center">
@@ -74,11 +118,23 @@ export function ContactForm() {
               className="border-gray-700 bg-gray-700/50 text-white placeholder:text-gray-400 focus:border-orange-500 focus:ring-orange-500 resize-none"
             />
           </div>
+          {submitStatus.type && (
+            <div
+              className={`p-4 rounded-lg ${
+                submitStatus.type === 'success'
+                  ? 'bg-green-500/20 text-green-400 border border-green-500/50'
+                  : 'bg-red-500/20 text-red-400 border border-red-500/50'
+              }`}
+            >
+              {submitStatus.message}
+            </div>
+          )}
           <Button
             type="submit"
-            className="w-full bg-orange-500 text-white hover:bg-orange-600 text-base font-bold px-8 py-6 rounded-lg"
+            disabled={isSubmitting}
+            className="w-full bg-orange-500 text-white hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-base font-bold px-8 py-6 rounded-lg"
           >
-            Submit
+            {isSubmitting ? 'Sending...' : 'Submit'}
           </Button>
         </form>
       </div>
