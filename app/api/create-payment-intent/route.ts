@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
+import { getAllowedPriceIds } from '@/lib/stripe-prices'
 
 function getStripe() {
   if (!process.env.STRIPE_SECRET_KEY) {
@@ -8,14 +9,6 @@ function getStripe() {
   return new Stripe(process.env.STRIPE_SECRET_KEY, {
     apiVersion: '2025-02-24.acacia',
   })
-}
-
-// Allowed price IDs for security
-function getAllowedPriceIds() {
-  return [
-    process.env.NEXT_PUBLIC_STRIPE_PRICE_ID, // One-time price
-    'price_1SmwLNKx2xkrGl8olwl91cwM', // Subscription price
-  ].filter(Boolean) as string[]
 }
 
 export async function POST(request: NextRequest) {
