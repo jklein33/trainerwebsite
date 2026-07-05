@@ -4,10 +4,6 @@ import { useState, useEffect } from "react"
 import { EmbeddedCheckout } from "@/components/embedded-checkout"
 import { useRouter } from "next/navigation"
 
-// Price IDs
-const ONETIME_PRICE_ID = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID || 'price_1Smi6GKx2xkrGl8oaMCLcwNM'
-const SUBSCRIPTION_PRICE_ID = 'price_1SmwLNKx2xkrGl8olwl91cwM'
-
 type PaymentType = 'one-time' | 'subscription'
 
 interface PricingData {

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
+import { getOneTimePriceId, getSubscriptionPriceId } from '@/lib/stripe-prices'
 
 function getStripe() {
   if (!process.env.STRIPE_SECRET_KEY) {
@@ -10,9 +11,9 @@ function getStripe() {
   })
 }
 
-// Price IDs
-const ONETIME_PRICE_ID = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID || 'price_1Smi6GKx2xkrGl8oaMCLcwNM'
-const SUBSCRIPTION_PRICE_ID = 'price_1SmwLNKx2xkrGl8olwl91cwM'
+// Price IDs from environment variables
+const ONETIME_PRICE_ID = getOneTimePriceId()
+const SUBSCRIPTION_PRICE_ID = getSubscriptionPriceId()
 
 export async function GET(request: NextRequest) {
   try {

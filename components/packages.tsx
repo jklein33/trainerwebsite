@@ -27,7 +27,13 @@ const getStripe = async (): Promise<Stripe | null> => {
 
   if (!stripePromise) {
     stripePromise = import("@stripe/stripe-js").then((stripe) =>
-      stripe.loadStripe(publishableKey)
+      stripe.loadStripe(publishableKey, {
+        developerTools: {
+          assistant: {
+            enabled: false,
+          },
+        },
+      })
     )
   }
   return stripePromise
