@@ -265,6 +265,9 @@ export function EmbeddedCheckout({ clientSecret, amount, currency, paymentType =
 
   const options: StripeElementsOptions = {
     clientSecret,
+    assistant: {
+      enabled: false,
+    },
     appearance: {
       theme: 'night',
       variables: {
@@ -277,7 +280,7 @@ export function EmbeddedCheckout({ clientSecret, amount, currency, paymentType =
         borderRadius: '12px',
       },
     },
-  }
+  } as StripeElementsOptions
 
   return (
     <Elements stripe={stripePromise} options={options}>
