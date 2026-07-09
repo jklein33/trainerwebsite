@@ -2,9 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { EmbeddedCheckout } from "@/components/embedded-checkout"
-import { useRouter } from "next/navigation"
-
-type PaymentType = 'one-time' | 'subscription'
 
 interface PricingData {
   oneTime: {
@@ -13,43 +10,20 @@ interface PricingData {
     currency: string
     originalAmount: number | null
   }
-  subscription: {
-    priceId: string
-    monthlyAmount: number
-    currency: string
-    interval: string
-    intervalCount: number
-    totalAmount: number
-    originalMonthlyAmount: number | null
-    originalTotalAmount: number | null
-  }
 }
 
 export default function CheckoutPage() {
-  const [paymentType, setPaymentType] = useState<PaymentType>('one-time')
   const [pricing, setPricing] = useState<PricingData | null>(null)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
-  const [amount, setAmount] = useState<number>(0)
   const [currency, setCurrency] = useState<string>("usd")
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
 
   const formatAmount = (amount: number, currency: string) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: currency.toUpperCase(),
     }).format(amount / 100)
-  }
-
-  const getTotalDueToday = () => {
-    if (!pricing) return 0
-    
-    if (paymentType === 'one-time') {
-      return pricing.oneTime.amount
-    } else {
-      return pricing.subscription.monthlyAmount
-    }
   }
 
   // Fetch prices from Stripe on mount
@@ -77,15 +51,10 @@ export default function CheckoutPage() {
     fetchPrices()
   }, [])
 
-  const handlePaymentTypeChange = async (type: PaymentType) => {
-    if (!pricing) return
-    
-    setPaymentType(type)
+  const initializePayment = async (pricingData: PricingData) => {
     setClientSecret(null)
     setError(null)
     setLoading(true)
-
-    const priceId = type === 'one-time' ? pricing.oneTime.priceId : pricing.subscription.priceId
 
     try {
       const response = await fetch('/api/create-payment-intent', {
@@ -94,8 +63,8 @@ export default function CheckoutPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          priceId,
-          paymentType: type,
+          priceId: pricingData.oneTime.priceId,
+          paymentType: 'one-time',
         }),
       })
 
@@ -106,7 +75,6 @@ export default function CheckoutPage() {
 
       const data = await response.json()
       setClientSecret(data.clientSecret)
-      setAmount(data.amount)
       setCurrency(data.currency)
     } catch (err) {
       console.error('Payment intent creation error:', err)
@@ -119,7 +87,7 @@ export default function CheckoutPage() {
   // Initialize payment when pricing is loaded
   useEffect(() => {
     if (pricing) {
-      handlePaymentTypeChange('one-time')
+      initializePayment(pricing)
     }
   }, [pricing])
 
@@ -166,81 +134,20 @@ export default function CheckoutPage() {
                 </ul>
               </div>
 
-              {/* Payment Plan Selector */}
+              {/* One-time Price */}
               {pricing && (
                 <div className="bg-gray-900/50 rounded-2xl p-6 mb-6 border border-gray-800">
-                  <div className="space-y-4">
-                    {/* One-time Payment Option */}
-                    <label className="flex items-start gap-4 p-4 border-2 rounded-xl cursor-pointer hover:bg-gray-800/50 transition-colors"
-                      style={{ 
-                        borderColor: paymentType === 'one-time' ? '#f97316' : '#374151',
-                        backgroundColor: paymentType === 'one-time' ? 'rgba(249, 115, 22, 0.1)' : 'transparent',
-                      }}
-                    >
-                      <input
-                        type="radio"
-                        name="paymentType"
-                        value="one-time"
-                        checked={paymentType === 'one-time'}
-                        onChange={() => handlePaymentTypeChange('one-time')}
-                        className="mt-1 w-5 h-5 text-orange-500"
-                      />
-                      <div className="flex-1">
-                        <div className="flex items-baseline gap-2 mb-1">
-                          <span className="text-2xl font-bold text-white">
-                            {formatAmount(pricing.oneTime.amount, pricing.oneTime.currency)}
-                          </span>
-                          {pricing.oneTime.originalAmount && (
-                            <span className="text-lg text-gray-400 line-through">
-                              {formatAmount(pricing.oneTime.originalAmount, pricing.oneTime.currency)}
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-sm text-gray-300">One-time fee</p>
-                      </div>
-                    </label>
-
-                    {/* Subscription Payment Option */}
-                    <label className="flex items-start gap-4 p-4 border-2 rounded-xl cursor-pointer hover:bg-gray-800/50 transition-colors"
-                      style={{ 
-                        borderColor: paymentType === 'subscription' ? '#f97316' : '#374151',
-                        backgroundColor: paymentType === 'subscription' ? 'rgba(249, 115, 22, 0.1)' : 'transparent',
-                      }}
-                    >
-                      <input
-                        type="radio"
-                        name="paymentType"
-                        value="subscription"
-                        checked={paymentType === 'subscription'}
-                        onChange={() => handlePaymentTypeChange('subscription')}
-                        className="mt-1 w-5 h-5 text-orange-500"
-                      />
-                      <div className="flex-1">
-                        <div className="mb-2">
-                          <span className="text-sm text-gray-300">12x </span>
-                          <span className="text-2xl font-bold text-white">
-                            {formatAmount(pricing.subscription.monthlyAmount, pricing.subscription.currency)}/month
-                          </span>
-                          {pricing.subscription.originalMonthlyAmount && (
-                            <span className="text-lg text-gray-400 line-through ml-2">
-                              {formatAmount(pricing.subscription.originalMonthlyAmount, pricing.subscription.currency)}/month
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex items-baseline gap-2">
-                          <span className="text-sm text-gray-300">
-                            {formatAmount(pricing.subscription.totalAmount, pricing.subscription.currency)}
-                          </span>
-                          {pricing.subscription.originalTotalAmount && (
-                            <span className="text-sm text-gray-400 line-through">
-                              {formatAmount(pricing.subscription.originalTotalAmount, pricing.subscription.currency)}
-                            </span>
-                          )}
-                          <span className="text-sm text-gray-300 ml-2">installment plan</span>
-                        </div>
-                      </div>
-                    </label>
+                  <div className="flex items-baseline gap-2 mb-1">
+                    <span className="text-2xl font-bold text-white">
+                      {formatAmount(pricing.oneTime.amount, pricing.oneTime.currency)}
+                    </span>
+                    {pricing.oneTime.originalAmount && (
+                      <span className="text-lg text-gray-400 line-through">
+                        {formatAmount(pricing.oneTime.originalAmount, pricing.oneTime.currency)}
+                      </span>
+                    )}
                   </div>
+                  <p className="text-sm text-gray-300">One-time fee</p>
                 </div>
               )}
 
@@ -253,7 +160,7 @@ export default function CheckoutPage() {
                     </div>
                     <div className="text-right">
                       <p className="text-2xl font-bold text-white">
-                        {formatAmount(getTotalDueToday(), currency)} {currency.toUpperCase()}
+                        {formatAmount(pricing.oneTime.amount, currency)} {currency.toUpperCase()}
                       </p>
                     </div>
                   </div>
@@ -277,10 +184,10 @@ export default function CheckoutPage() {
               {clientSecret && !loading && pricing && (
                 <EmbeddedCheckout
                   clientSecret={clientSecret}
-                  amount={getTotalDueToday()}
+                  amount={pricing.oneTime.amount}
                   currency={currency}
-                  paymentType={paymentType}
-                  priceId={paymentType === 'one-time' ? pricing.oneTime.priceId : pricing.subscription.priceId}
+                  paymentType="one-time"
+                  priceId={pricing.oneTime.priceId}
                 />
               )}
             </div>

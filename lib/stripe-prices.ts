@@ -15,5 +15,5 @@ export function getSubscriptionPriceId(): string {
 }
 
 export function getAllowedPriceIds(): string[] {
-  return [getOneTimePriceId(), getSubscriptionPriceId()]
+  return [getOneTimePriceId()]
 }
