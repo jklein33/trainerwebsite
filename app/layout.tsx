@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Nav } from "@/components/nav";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const fkGrotesk = localFont({
   src: [
@@ -67,6 +68,7 @@ export default function RootLayout({
       >
         <Nav />
         {children}
+        <SpeedInsights />
       </body>
     </html>
   );
