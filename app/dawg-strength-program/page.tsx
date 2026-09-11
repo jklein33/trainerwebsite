@@ -63,7 +63,7 @@ export default function DawgStrengthProgram() {
             size="lg" 
             className="bg-orange-500 text-white hover:bg-orange-600 text-lg sm:text-xl px-12 py-8 rounded-xl font-bold shadow-lg"
           >
-            Let's Go
+            Let&apos;s Go
           </CheckoutButton>
         </div>
       </section>
@@ -344,7 +344,7 @@ export default function DawgStrengthProgram() {
           {/* Photo Gallery Carousel */}
           <div className="mt-16">
             <h2 className="text-3xl font-bold text-white mb-8 text-center">
-              James's Personal Transformations
+              James&apos;s Personal Transformations
             </h2>
             <div className="relative max-w-4xl mx-auto">
               {/* Carousel Container */}

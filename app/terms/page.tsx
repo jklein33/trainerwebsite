@@ -15,13 +15,13 @@ export default function TermsPage() {
           <div className="space-y-8 text-gray-300 leading-relaxed">
             <div className="bg-gray-900/50 rounded-xl p-6 border border-gray-800 mb-8">
               <p className="text-white font-semibold mb-2">
-                Welcome, and thank you for your interest in Dawg Strength ("Community Owner," "we," or "us") and our online community, along with any mobile or other downloadable applications that we make available to enable access to the same (collectively, the "Community"). These Terms of Service are a legally binding contract between you and Community Owner regarding your use of the Community.
+                Welcome, and thank you for your interest in Dawg Strength (&quot;Community Owner,&quot; &quot;we,&quot; or &quot;us&quot;) and our online community, along with any mobile or other downloadable applications that we make available to enable access to the same (collectively, the &quot;Community&quot;). These Terms of Service are a legally binding contract between you and Community Owner regarding your use of the Community.
               </p>
               <p className="text-orange-500 font-bold mt-4 mb-2">
                 PLEASE READ THE FOLLOWING TERMS CAREFULLY.
               </p>
               <p className="text-sm">
-                BY ACCEPTING THESE TERMS, EITHER BY CLICKING "I ACCEPT," OR BY OTHERWISE ACCESSING OR USING THE COMMUNITY, YOU AGREE THAT YOU HAVE READ AND UNDERSTOOD, AND, AS A CONDITION TO YOUR USE OF AND ACCESS TO THE COMMUNITY, YOU AGREE TO BE BOUND BY, THE FOLLOWING TERMS AND CONDITIONS, INCLUDING COMMUNITY OWNER'S PRIVACY POLICY (COLLECTIVELY, THESE "TERMS") AND THE ADDITIONAL TERMS ATTACHED AS EXHIBIT A (THE "ADDITIONAL TERMS") EITHER (A) ON BEHALF OF YOURSELF AS AN INDIVIDUAL, OR (B) IF YOU ARE ACCESSING THE COMMUNITY ON BEHALF OF AN ENTITY, ORGANIZATION, OR COMMUNITY OWNER, ON BEHALF OF SUCH ENTITY, ORGANIZATION OR COMMUNITY OWNER FOR WHICH YOU ACT, AND YOU REPRESENT THAT YOU HAVE THE AUTHORITY TO BIND SUCH ENTITY, ORGANIZATION OR COMMUNITY OWNER TO THIS AGREEMENT. IF YOU ARE NOT ELIGIBLE, OR DO NOT AGREE TO THE TERMS, THEN YOU DO NOT HAVE OUR PERMISSION TO USE THE COMMUNITY. YOUR USE OF THE COMMUNITY, AND COMMUNITY OWNER'S PROVISION OF THE COMMUNITY TO YOU, CONSTITUTES AN AGREEMENT BY COMMUNITY OWNER AND BY YOU TO BE BOUND BY THESE TERMS.
+                BY ACCEPTING THESE TERMS, EITHER BY CLICKING &quot;I ACCEPT,&quot; OR BY OTHERWISE ACCESSING OR USING THE COMMUNITY, YOU AGREE THAT YOU HAVE READ AND UNDERSTOOD, AND, AS A CONDITION TO YOUR USE OF AND ACCESS TO THE COMMUNITY, YOU AGREE TO BE BOUND BY, THE FOLLOWING TERMS AND CONDITIONS, INCLUDING COMMUNITY OWNER&apos;S PRIVACY POLICY (COLLECTIVELY, THESE &quot;TERMS&quot;) AND THE ADDITIONAL TERMS ATTACHED AS EXHIBIT A (THE &quot;ADDITIONAL TERMS&quot;) EITHER (A) ON BEHALF OF YOURSELF AS AN INDIVIDUAL, OR (B) IF YOU ARE ACCESSING THE COMMUNITY ON BEHALF OF AN ENTITY, ORGANIZATION, OR COMMUNITY OWNER, ON BEHALF OF SUCH ENTITY, ORGANIZATION OR COMMUNITY OWNER FOR WHICH YOU ACT, AND YOU REPRESENT THAT YOU HAVE THE AUTHORITY TO BIND SUCH ENTITY, ORGANIZATION OR COMMUNITY OWNER TO THIS AGREEMENT. IF YOU ARE NOT ELIGIBLE, OR DO NOT AGREE TO THE TERMS, THEN YOU DO NOT HAVE OUR PERMISSION TO USE THE COMMUNITY. YOUR USE OF THE COMMUNITY, AND COMMUNITY OWNER&apos;S PROVISION OF THE COMMUNITY TO YOU, CONSTITUTES AN AGREEMENT BY COMMUNITY OWNER AND BY YOU TO BE BOUND BY THESE TERMS.
               </p>
               <p className="text-orange-500 font-bold mt-4">
                 ARBITRATION NOTICE. Except for certain kinds of disputes described in Section 15 (Dispute Resolution and Arbitration), you agree that disputes arising under these Terms will be resolved by binding, individual arbitration, and BY ACCEPTING THESE TERMS, YOU AND COMMUNITY OWNER ARE EACH WAIVING THE RIGHT TO A TRIAL BY JURY OR TO PARTICIPATE IN ANY CLASS ACTION OR REPRESENTATIVE PROCEEDING.
@@ -60,7 +60,7 @@ export default function TermsPage() {
                 <div>
                   <h3 className="text-xl font-semibold text-white mb-2">3.3. Feedback</h3>
                   <p>
-                    If you provide input and suggestions regarding the Community ("Submissions"), you grant Community Owner an unrestricted, perpetual, irrevocable, non-exclusive, fully-paid, royalty-free right and license to exploit the Submissions in any manner and for any purpose.
+                    If you provide input and suggestions regarding the Community (&quot;Submissions&quot;), you grant Community Owner an unrestricted, perpetual, irrevocable, non-exclusive, fully-paid, royalty-free right and license to exploit the Submissions in any manner and for any purpose.
                   </p>
                 </div>
               </div>
@@ -69,7 +69,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-2xl font-bold text-white mb-4">4. Ownership; Proprietary Rights</h2>
               <p>
-                The Community is owned and operated by Community Owner. All visual interfaces, graphics, design, compilation, information, data, computer code, products, software, services, and all other elements of the Community ("Materials") are protected by intellectual property laws. All Materials are the property of Community Owner or its third-party licensors. Except as expressly authorized, you may not make use of the Materials.
+                The Community is owned and operated by Community Owner. All visual interfaces, graphics, design, compilation, information, data, computer code, products, software, services, and all other elements of the Community (&quot;Materials&quot;) are protected by intellectual property laws. All Materials are the property of Community Owner or its third-party licensors. Except as expressly authorized, you may not make use of the Materials.
               </p>
             </section>
 
@@ -79,7 +79,7 @@ export default function TermsPage() {
                 <div>
                   <h3 className="text-xl font-semibold text-white mb-2">5.1. Third-Party Services</h3>
                   <p>
-                    The Community may integrate with third-party platforms, including Discord (for community) and GoHighLevel (for online program delivery). Your use of Discord is subject to <Link href="https://discord.com/terms" target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:text-orange-600 underline">Discord's Terms of Service</Link> and <Link href="https://discord.com/guidelines" target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:text-orange-600 underline">Community Guidelines</Link>. Your use of GoHighLevel is subject to <Link href="https://www.gohighlevel.com/terms-of-service" target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:text-orange-600 underline">GoHighLevel's Terms of Service</Link>. Community Owner is not responsible for third-party services.
+                    The Community may integrate with third-party platforms, including Discord (for community) and GoHighLevel (for online program delivery). Your use of Discord is subject to <Link href="https://discord.com/terms" target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:text-orange-600 underline">Discord&apos;s Terms of Service</Link> and <Link href="https://discord.com/guidelines" target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:text-orange-600 underline">Community Guidelines</Link>. Your use of GoHighLevel is subject to <Link href="https://www.gohighlevel.com/terms-of-service" target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:text-orange-600 underline">GoHighLevel&apos;s Terms of Service</Link>. Community Owner is not responsible for third-party services.
                   </p>
                 </div>
                 <div>
@@ -129,7 +129,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-2xl font-bold text-white mb-4">11. TERM, TERMINATION, AND MODIFICATION OF THE COMMUNITY</h2>
               <p className="text-gray-400 italic">
-                Standard provisions regarding the term of these Terms, termination rights, effects of termination, and Community Owner's right to modify or discontinue the Community.
+                Standard provisions regarding the term of these Terms, termination rights, effects of termination, and Community Owner&apos;s right to modify or discontinue the Community.
               </p>
             </section>
 
@@ -143,14 +143,14 @@ export default function TermsPage() {
             <section>
               <h2 className="text-2xl font-bold text-white mb-4">13. DISCLAIMERS; NO WARRANTIES BY COMMUNITY OWNER</h2>
               <p className="text-gray-400 italic">
-                The Community is provided "AS IS" without warranties of any kind. Standard disclaimers apply regarding merchantability, fitness for a particular purpose, and non-infringement.
+                The Community is provided &quot;AS IS&quot; without warranties of any kind. Standard disclaimers apply regarding merchantability, fitness for a particular purpose, and non-infringement.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-bold text-white mb-4">14. LIMITATION OF LIABILITY</h2>
               <p className="text-gray-400 italic">
-                Standard limitation of liability provisions apply, limiting Community Owner's liability to the maximum extent permitted by law.
+                Standard limitation of liability provisions apply, limiting Community Owner&apos;s liability to the maximum extent permitted by law.
               </p>
             </section>
 
@@ -211,7 +211,7 @@ export default function TermsPage() {
               <section className="mt-6">
                 <h3 className="text-xl font-semibold text-white mb-3">1. OVERVIEW</h3>
                 <p>
-                  This Client Contract ("Agreement") is entered into between you (the "Client") and Dawg Strength LLC ("Company") for use of free and paid services provided by Dawg Strength LLC, including personal training, stretch therapy, and the online program.
+                  This Client Contract (&quot;Agreement&quot;) is entered into between you (the &quot;Client&quot;) and Dawg Strength LLC (&quot;Company&quot;) for use of free and paid services provided by Dawg Strength LLC, including personal training, stretch therapy, and the online program.
                 </p>
               </section>
 
@@ -225,7 +225,7 @@ export default function TermsPage() {
               <section className="mt-6">
                 <h3 className="text-xl font-semibold text-white mb-3">3. SCOPE OF SERVICES FOR PERSONAL TRAINING & STRETCH THERAPY</h3>
                 <ul className="list-disc list-inside space-y-2 ml-4">
-                  <li><strong>1:1 Sessions:</strong> One-on-one personal training or stretch therapy sessions, in-person or virtually, customized to the Client's needs.</li>
+                  <li><strong>1:1 Sessions:</strong> One-on-one personal training or stretch therapy sessions, in-person or virtually, customized to the Client&apos;s needs.</li>
                   <li><strong>Additional Support:</strong> Email support with responses within 72 hours (except holidays/vacations/illness).</li>
                   <li><strong>Overall Purpose:</strong> Educational services to improve personal fitness, health, mobility, and habits.</li>
                 </ul>
@@ -283,7 +283,7 @@ export default function TermsPage() {
 
               <section className="mt-6">
                 <p className="text-gray-400 italic">
-                  The remaining sections of Exhibit A (Guarantees and Warranties, Limitation of Liability, Waiver, Independent Contractor, Intellectual Property, Confidentiality, Prohibited Use, Indemnification, Severability, Waiver, Non-Disparagement, Governing Law (Maryland), Attorney's Fees, Assignment, Force Majeure, Termination, and Miscellaneous) follow standard terms and conditions applicable to personal training, stretch therapy, and online program services.
+                  The remaining sections of Exhibit A (Guarantees and Warranties, Limitation of Liability, Waiver, Independent Contractor, Intellectual Property, Confidentiality, Prohibited Use, Indemnification, Severability, Waiver, Non-Disparagement, Governing Law (Maryland), Attorney&apos;s Fees, Assignment, Force Majeure, Termination, and Miscellaneous) follow standard terms and conditions applicable to personal training, stretch therapy, and online program services.
                 </p>
               </section>
             </div>
