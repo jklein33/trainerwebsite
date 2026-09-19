@@ -74,6 +74,7 @@ export function CoursePlayer({
         <div className="academy-player-error">
           <p role="alert">{error}</p>
           <button
+            type="button"
             className="academy-secondary"
             onClick={() => setAttempt(attempt + 1)}
           >
@@ -107,7 +108,12 @@ export function DownloadAsset({ id, name }: { id: string; name: string }) {
   }
   return (
     <div>
-      <button className="academy-resource" disabled={busy} onClick={download}>
+      <button
+        type="button"
+        className="academy-resource"
+        disabled={busy}
+        onClick={download}
+      >
         <Download size={17} />
         <span>{name}</span>
         <small>{busy ? "Preparing…" : "Download"}</small>

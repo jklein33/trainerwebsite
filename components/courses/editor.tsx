@@ -1,15 +1,17 @@
 "use client";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { RichNode } from "@/lib/courses/types";
 import { safeLink } from "@/lib/courses/validation";
 export function DescriptionEditor({
   value,
   onChange,
+  disabled = false,
 }: {
   value: RichNode;
   onChange: (value: RichNode) => void;
+  disabled?: boolean;
 }) {
   const [link, setLink] = useState(""),
     [showLink, setShowLink] = useState(false);
@@ -31,6 +33,9 @@ export function DescriptionEditor({
       },
     },
   });
+  useEffect(() => {
+    editor?.setEditable(!disabled, false);
+  }, [editor, disabled]);
   if (!editor) return <div className="academy-muted">Loading editor…</div>;
   const tools: [string, () => void, string][] = [
     ["Bold", () => editor.chain().focus().toggleBold().run(), "bold"],

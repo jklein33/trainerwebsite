@@ -10,7 +10,6 @@ import {
   Pencil,
   Archive,
   Trash2,
-  Paperclip,
 } from "lucide-react";
 import type {
   Course,
@@ -182,6 +181,22 @@ export function AdminCourse({
       </button>
     </div>
   );
+  if (editing)
+    return (
+      <main>
+        <ContentForm
+          key={`${editing.type}-${editing.item?.id ?? editing.parentId ?? "new"}`}
+          {...editing}
+          courseId={course.id}
+          assets={assets}
+          attachments={attachments}
+          onDone={() => {
+            setEditing(null);
+            window.scrollTo({ top: 0, behavior: "instant" });
+          }}
+        />
+      </main>
+    );
   return (
     <main>
       <Link className="academy-back" href="/admin">
@@ -219,14 +234,6 @@ export function AdminCourse({
           {notice}
         </p>
       )}
-      {editing && (
-        <ContentForm
-          key={`${editing.type}-${editing.item?.id ?? editing.parentId ?? "new"}`}
-          {...editing}
-          assets={assets}
-          onDone={() => setEditing(null)}
-        />
-      )}
       <div className="academy-section-heading">
         <h2>Curriculum</h2>
         <button
@@ -239,7 +246,9 @@ export function AdminCourse({
       {modules.length === 0 && (
         <div className="academy-empty">
           <h3>Give your course its first chapter.</h3>
-          <p>Add a module, upload a video, then create a lesson.</p>
+          <p>
+            Add a module, then create a lesson with its video and resources.
+          </p>
         </div>
       )}
       {modules.map((module, index) => {
@@ -266,80 +275,27 @@ export function AdminCourse({
                   </div>
                   {controls("lesson", lesson, rows, i)}
                 </div>
-                <details>
-                  <summary>
-                    <Paperclip size={14} /> Resources (
-                    {
-                      attachments.filter((a) => a.lesson_id === lesson.id)
-                        .length
+                <p className="academy-lesson-media-summary">
+                  {lesson.video_asset_id ? "Video attached" : "No video yet"} ·{" "}
+                  {
+                    attachments.filter((link) => link.lesson_id === lesson.id)
+                      .length
+                  }{" "}
+                  resources
+                  <button
+                    type="button"
+                    className="academy-text-link"
+                    onClick={() =>
+                      setEditing({
+                        type: "lesson",
+                        item: lesson,
+                        parentId: module.id,
+                      })
                     }
-                    )
-                  </summary>
-                  <div className="academy-attachment-edit">
-                    {attachments
-                      .filter((a) => a.lesson_id === lesson.id)
-                      .map((a) => (
-                        <div key={a.id} className="academy-inline">
-                          <span>
-                            {assets.find((asset) => asset.id === a.asset_id)
-                              ?.name ?? "Resource"}
-                          </span>
-                          <button
-                            className="academy-text-link"
-                            disabled={busy}
-                            onClick={() =>
-                              void action(() =>
-                                callApi(
-                                  "/api/admin/content",
-                                  { type: "attachment", id: a.id },
-                                  "DELETE",
-                                ),
-                              )
-                            }
-                          >
-                            Detach
-                          </button>
-                        </div>
-                      ))}
-                    <label>
-                      Add a resource
-                      <select
-                        value=""
-                        disabled={busy}
-                        onChange={(e) => {
-                          if (e.target.value)
-                            void action(() =>
-                              callApi("/api/admin/content", {
-                                type: "attachment",
-                                data: {
-                                  lesson_id: lesson.id,
-                                  asset_id: e.target.value,
-                                },
-                              }),
-                            );
-                        }}
-                      >
-                        <option value="">Choose an uploaded file</option>
-                        {assets
-                          .filter(
-                            (a) =>
-                              a.kind !== "video" &&
-                              a.status === "ready" &&
-                              !attachments.some(
-                                (link) =>
-                                  link.lesson_id === lesson.id &&
-                                  link.asset_id === a.id,
-                              ),
-                          )
-                          .map((a) => (
-                            <option key={a.id} value={a.id}>
-                              {a.name}
-                            </option>
-                          ))}
-                      </select>
-                    </label>
-                  </div>
-                </details>
+                  >
+                    Edit lesson & media
+                  </button>
+                </p>
               </div>
             ))}
             <button
@@ -353,77 +309,87 @@ export function AdminCourse({
           </section>
         );
       })}
-      <div className="academy-section-heading">
-        <h2>Media library</h2>
-        <span>{assets.length} files</span>
-      </div>
-      <Uploader
-        courseId={course.id}
-        assets={assets}
-        onComplete={(asset) => {
-          setNotice(
-            `${asset.name} is ready. Select it in a lesson or course settings.`,
-          );
-          router.refresh();
-        }}
-      />
-      <div className="academy-assets">
-        {assets.map((asset) => (
-          <div key={asset.id}>
-            <div>
-              <strong>{asset.name}</strong>
-              <span>
-                {asset.kind} · {(asset.size_bytes / 1024 ** 2).toFixed(1)} MB ·{" "}
-                {asset.status}
-              </span>
-            </div>
-            <div className="academy-row-actions">
-              <button
-                disabled={busy}
-                onClick={() =>
-                  void action(() =>
-                    callApi(
-                      "/api/admin/assets",
-                      {
-                        id: asset.id,
-                        action:
-                          asset.status === "archived"
-                            ? "restore"
-                            : asset.status === "uploading"
-                              ? "complete"
-                              : "archive",
-                      },
-                      "PATCH",
-                    ),
-                  )
-                }
-              >
-                {asset.status === "archived"
-                  ? "Restore"
-                  : asset.status === "uploading"
-                    ? "Check upload"
-                    : "Archive"}
-              </button>
-              <button
-                aria-label={`Delete ${asset.name}`}
-                disabled={busy}
-                onClick={() => {
-                  if (
-                    window.confirm(
-                      `Delete “${asset.name}” permanently from storage?`,
-                    )
-                  )
+      <details className="academy-library-panel">
+        <summary>
+          Media library{" "}
+          <span>{assets.length} files · Reuse and manage uploaded files</span>
+        </summary>
+        <div className="academy-section-heading">
+          <h2>Media library</h2>
+          <span>{assets.length} files</span>
+        </div>
+        <Uploader
+          courseId={course.id}
+          assets={assets}
+          onComplete={(asset) => {
+            setNotice(
+              `${asset.name} is ready. Select it in a lesson or course settings.`,
+            );
+            router.refresh();
+          }}
+        />
+        <div className="academy-assets">
+          {assets.map((asset) => (
+            <div key={asset.id}>
+              <div>
+                <strong>{asset.name}</strong>
+                <span>
+                  {asset.kind} · {(asset.size_bytes / 1024 ** 2).toFixed(1)} MB
+                  · {asset.status}
+                </span>
+              </div>
+              <div className="academy-row-actions">
+                <button
+                  disabled={busy}
+                  onClick={() =>
                     void action(() =>
-                      callApi("/api/admin/assets", { id: asset.id }, "DELETE"),
-                    );
-                }}
-              >
-                <Trash2 size={16} />
-              </button>
+                      callApi(
+                        "/api/admin/assets",
+                        {
+                          id: asset.id,
+                          action:
+                            asset.status === "archived"
+                              ? "restore"
+                              : asset.status === "uploading"
+                                ? "complete"
+                                : "archive",
+                        },
+                        "PATCH",
+                      ),
+                    )
+                  }
+                >
+                  {asset.status === "archived"
+                    ? "Restore"
+                    : asset.status === "uploading"
+                      ? "Check upload"
+                      : "Archive"}
+                </button>
+                <button
+                  aria-label={`Delete ${asset.name}`}
+                  disabled={busy}
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        `Delete “${asset.name}” permanently from storage?`,
+                      )
+                    )
+                      void action(() =>
+                        callApi(
+                          "/api/admin/assets",
+                          { id: asset.id },
+                          "DELETE",
+                        ),
+                      );
+                  }}
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </details>
       <details className="academy-danger">
         <summary>Archive or delete this course</summary>
         <p>
