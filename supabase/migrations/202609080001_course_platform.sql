@@ -1,4 +1,8 @@
 -- Apply to a dedicated Supabase project. Never bootstrap an administrator from signup metadata.
+-- SQL Editor: paste this entire file and run once in the NEW course project.
+-- Keep the transaction intact so an error cannot leave a partial installation.
+begin;
+
 create extension if not exists pgcrypto;
 
 create table public.course_profiles (
@@ -279,3 +283,5 @@ create policy course_storage_admin on storage.objects for all to authenticated
 using(bucket_id='course-media' and public.course_is_admin())
 with check(bucket_id='course-media' and public.course_is_admin());
 -- Learners receive short-lived URLs only from the authorized media API, never direct Storage access.
+
+commit;

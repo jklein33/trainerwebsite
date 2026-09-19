@@ -100,7 +100,7 @@ type Table<Row> = {
   Update: Partial<Row>;
   Relationships: [];
 };
-export type Database = {
+type PublicDatabase = {
   public: {
     Tables: {
       courses: Table<Course>;
@@ -148,4 +148,8 @@ export type Database = {
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
   };
+};
+
+export type Database = PublicDatabase & {
+  course_staging: PublicDatabase["public"];
 };

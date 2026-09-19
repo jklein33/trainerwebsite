@@ -1,5 +1,6 @@
 import { context, apiError, CourseError } from "@/lib/courses/server";
 import { serviceClient } from "@/lib/supabase/admin";
+import { courseStorageConfig } from "@/lib/courses/config";
 import { uuid } from "@/lib/courses/validation";
 export async function GET(
   request: Request,
@@ -19,7 +20,7 @@ export async function GET(
       throw new CourseError("This file is not available.", 404);
     const download = new URL(request.url).searchParams.has("download");
     const { data, error: signError } = await serviceClient()
-      .storage.from("course-media")
+      .storage.from(courseStorageConfig().bucket)
       .createSignedUrl(
         asset.path,
         3600,

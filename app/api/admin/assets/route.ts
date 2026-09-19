@@ -9,6 +9,7 @@ import {
 } from "@/lib/courses/server";
 import { uuid, validateUpload } from "@/lib/courses/validation";
 import { serviceClient } from "@/lib/supabase/admin";
+import { courseStorageConfig } from "@/lib/courses/config";
 export async function POST(request: Request) {
   try {
     requireSameOrigin(request);
@@ -57,7 +58,7 @@ export async function PATCH(request: Request) {
     if (body.action === "complete" || body.action === "restore") {
       const objects = checked(
         await serviceClient()
-          .storage.from("course-media")
+          .storage.from(courseStorageConfig().bucket)
           .list(asset.course_id, { search: asset.path.split("/").at(-1) }),
       );
       const object = objects.find(
@@ -109,7 +110,9 @@ export async function DELETE(request: Request) {
         .eq("id", id),
     );
     checked(
-      await serviceClient().storage.from("course-media").remove([asset.path]),
+      await serviceClient()
+        .storage.from(courseStorageConfig().bucket)
+        .remove([asset.path]),
     );
     checked(await db.from("course_assets").delete().eq("id", id));
     return Response.json({ ok: true });

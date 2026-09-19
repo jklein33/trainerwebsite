@@ -3,11 +3,13 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { supabaseEnvironment } from "./env";
 import type { Database } from "@/lib/courses/types";
+import { courseStorageConfig, type CourseSchema } from "@/lib/courses/config";
 
 export async function serverClient() {
   const { url, key } = supabaseEnvironment();
   const jar = await cookies();
-  return createServerClient<Database>(url, key, {
+  return createServerClient<Database, CourseSchema>(url, key, {
+    db: { schema: courseStorageConfig().schema },
     cookies: {
       getAll: () => jar.getAll(),
       setAll: (values) => {

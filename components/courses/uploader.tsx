@@ -5,6 +5,7 @@ import { Upload } from "tus-js-client";
 import { UploadCloud } from "lucide-react";
 import { browserClient } from "@/lib/supabase/browser";
 import { supabaseEnvironment } from "@/lib/supabase/env";
+import { courseStorageConfig } from "@/lib/courses/config";
 import { validateUpload } from "@/lib/courses/validation";
 import type { Asset } from "@/lib/courses/types";
 import { callApi } from "./ui";
@@ -102,9 +103,9 @@ export function Uploader({
         uploadDataDuringCreation: true,
         removeFingerprintOnSuccess: true,
         fingerprint: async () =>
-          `course:${asset.path}:${file.size}:${file.lastModified}`,
+          `course:${host.origin}:${courseStorageConfig().bucket}:${asset.path}:${file.size}:${file.lastModified}`,
         metadata: {
-          bucketName: "course-media",
+          bucketName: courseStorageConfig().bucket,
           objectName: asset.path,
           contentType: asset.mime_type,
           cacheControl: "3600",

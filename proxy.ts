@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { supabaseConfigured, supabaseEnvironment } from "@/lib/supabase/env";
+import { courseStorageConfig } from "@/lib/courses/config";
 
 export async function proxy(request: NextRequest) {
   const courseUrl = process.env.NEXT_PUBLIC_COURSE_URL;
@@ -22,6 +23,7 @@ export async function proxy(request: NextRequest) {
   if (!supabaseConfigured()) return response;
   const { url, key } = supabaseEnvironment();
   const db = createServerClient(url, key, {
+    db: { schema: courseStorageConfig().schema },
     cookies: {
       getAll: () => request.cookies.getAll(),
       setAll: (values) => {
