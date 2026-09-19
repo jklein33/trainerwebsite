@@ -21,7 +21,7 @@ export function QuoteSection() {
           variant="ghost"
           className="text-lg font-semibold uppercase tracking-wider text-orange-500 hover:text-orange-600 hover:bg-transparent"
         >
-          <Link href="/contact">CONTACT</Link>
+          <Link href="/#contact">CONTACT</Link>
         </Button>
       </div>
     </section>

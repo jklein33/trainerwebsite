@@ -4,6 +4,7 @@ import Image from "next/image"
 import { CheckoutButton } from "@/components/checkout-button"
 import { CalendlyEmbed } from "@/components/calendly-embed"
 import { useState } from "react"
+import { MemberCourseLink } from "@/components/course-entry"
 
 export default function DawgStrengthProgram() {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -65,6 +66,7 @@ export default function DawgStrengthProgram() {
           >
             Let&apos;s Go
           </CheckoutButton>
+          <div className="mt-5"><MemberCourseLink /></div>
         </div>
       </section>
 

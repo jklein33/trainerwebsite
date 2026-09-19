@@ -2,6 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Check } from "lucide-react"
+import { MemberCourseLink } from "@/components/course-entry"
 
 export function Hero() {
   return (
@@ -36,6 +37,7 @@ export function Hero() {
               Find the Dawg
             </Button>
           </Link>
+          <MemberCourseLink />
           <div className="flex flex-col gap-4 pt-6">
             <div className="flex items-center gap-3">
               <Check className="h-6 w-6 flex-shrink-0 text-orange-500" />
