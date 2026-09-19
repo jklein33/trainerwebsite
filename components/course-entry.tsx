@@ -30,7 +30,7 @@ export function CourseEntry() {
               href={courseHref()}
               className="inline-flex min-h-12 items-center gap-3 rounded-lg bg-orange-500 px-6 py-3 font-semibold text-black transition-colors hover:bg-orange-400 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400"
             >
-              Open course room <ArrowUpRight size={20} aria-hidden="true" />
+              Sign in to your courses <ArrowUpRight size={20} aria-hidden="true" />
             </Link>
             <Link
               href={courseHref("/register")}
@@ -91,7 +91,7 @@ export function MemberCourseLink() {
         href={courseHref()}
         className="font-medium text-orange-400 underline underline-offset-4 hover:text-orange-300"
       >
-        Go to your courses
+        Sign in to your courses
       </Link>
     </p>
   );

@@ -1,6 +1,7 @@
 import "@/app/academy.css";
 import { AcademyNav } from "@/components/courses/ui";
-import { context } from "@/lib/courses/server";
+import { pageContext } from "@/lib/courses/server";
+import { supabaseConfigured } from "@/lib/supabase/env";
 import { PwaControls } from "@/components/courses/pwa-controls";
 export const metadata = {
   title: "Course Room | Dawg Strength",
@@ -12,16 +13,13 @@ export default async function AcademyLayout({
 }: {
   children: React.ReactNode;
 }) {
-  let signedIn = false,
-    admin = false;
-  try {
-    const { profile } = await context();
-    signedIn = true;
-    admin = profile.role === "admin";
-  } catch {}
+  const account = supabaseConfigured() ? await pageContext() : null;
   return (
     <div className="academy">
-      <AcademyNav signedIn={signedIn} admin={admin} />
+      <AcademyNav
+        signedIn={Boolean(account)}
+        admin={account?.profile.role === "admin"}
+      />
       <div className="academy-container">{children}</div>
       <footer className="academy-footer">
         <span>DAWG STRENGTH · THE WORK CONTINUES.</span>

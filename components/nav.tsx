@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { useRef, useState, type MouseEvent } from "react";
-import { Menu, X } from "lucide-react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { Menu, UserRound, X } from "lucide-react";
 import { courseHref } from "@/lib/courses/links";
+import { browserClient } from "@/lib/supabase/browser";
+import { supabaseConfigured } from "@/lib/supabase/env";
 
 const navLinks = [
   { href: "/#services", label: "Services" },
@@ -29,7 +31,25 @@ export function Nav() {
 
 function PublicNav({ pathname }: { pathname: string }) {
   const [open, setOpen] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
   const toggle = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    // This only selects navigation links; course pages enforce access on the server.
+    // A separate course host has its own cookies, so offer its sign-in entry point.
+    if (
+      !supabaseConfigured() ||
+      new URL(courseHref(), window.location.origin).origin !==
+        window.location.origin
+    )
+      return;
+    const db = browserClient();
+    const {
+      data: { subscription },
+    } = db.auth.onAuthStateChange((_event, session) => {
+      setSignedIn(Boolean(session?.user.email_confirmed_at));
+    });
+    return () => subscription.unsubscribe();
+  }, []);
   function followSection(event: MouseEvent<HTMLAnchorElement>, href: string) {
     setOpen(false);
     if (
@@ -56,7 +76,7 @@ function PublicNav({ pathname }: { pathname: string }) {
     <header className="sticky top-0 z-50 border-b border-white/10 bg-black px-4 py-3 sm:px-6 lg:px-12">
       <nav
         aria-label="Main navigation"
-        className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-3"
+        className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-2 gap-y-2"
         onKeyDown={(event) => {
           if (event.key === "Escape" && open) {
             setOpen(false);
@@ -77,7 +97,7 @@ function PublicNav({ pathname }: { pathname: string }) {
             className="h-16 w-auto object-contain sm:h-20 lg:h-24"
           />
         </Link>
-        <div className="hidden items-center gap-4 lg:flex">
+        <div className="ml-auto hidden items-center gap-4 lg:flex">
           {navLinks.map((link) => (
             <a
               key={link.href}
@@ -88,17 +108,15 @@ function PublicNav({ pathname }: { pathname: string }) {
               {link.label}
             </a>
           ))}
-          <Link href={courseHref("/login")} className={linkStyle}>
-            Member sign in
-          </Link>
         </div>
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="ml-auto flex items-center gap-3 lg:ml-6 lg:border-l lg:border-white/20 lg:pl-6">
           <Link
-            href={courseHref()}
+            href={courseHref(signedIn ? "/learn" : "/login")}
             onClick={() => setOpen(false)}
-            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-orange-500 px-4 text-sm font-semibold text-black transition-colors hover:bg-orange-400 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400 lg:px-6 lg:text-base"
+            className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded text-sm font-medium text-gray-300 transition-colors hover:text-orange-400 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400"
           >
-            Courses
+            <UserRound size={18} aria-hidden="true" />
+            {signedIn ? "My courses" : "Member login"}
           </Link>
           <button
             ref={toggle}
@@ -132,20 +150,6 @@ function PublicNav({ pathname }: { pathname: string }) {
                 {link.label}
               </a>
             ))}
-            <Link
-              href={courseHref("/login")}
-              onClick={() => setOpen(false)}
-              className={linkStyle}
-            >
-              Member sign in
-            </Link>
-            <Link
-              href={courseHref("/register")}
-              onClick={() => setOpen(false)}
-              className={linkStyle}
-            >
-              Create an account
-            </Link>
           </div>
         </div>
       </nav>
