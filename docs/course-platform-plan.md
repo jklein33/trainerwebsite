@@ -11,7 +11,7 @@ Reuse Savage AI's calculator/meal logic in a later milestone, not its authentica
 - Grant course access automatically after payment is confirmed.
 - One-time purchases with lifetime access; subscriptions are out of the initial milestone.
 - Supabase private Storage for videos, images and lesson attachments.
-- A new, dedicated Supabase test project; do not share Savage AI's backend.
+- Staging and production must use the client's existing DawgStrength_dev project. The developer-owned Supabase remains available for local-only verification, but the user has now pointed .env.local at client staging. Staging SQL and application support use course_staging and course-staging-media; all 14 SQL checks passed. After reloading the API schema cache, Data API access, demo content seeding, private video retrieval and the local registration page were verified. There are no staging members yet; member flows and Vercel connectivity remain unverified. Separate production support is a later step. See client-staging-setup.md.
 - Courses contain ordered modules, which contain ordered lessons.
 - Lesson descriptions support basic rich text. Attachments support Word, PDF, JPEG and PNG.
 - Responsive learner/admin UI, optional circular module navigation and installable PWA.

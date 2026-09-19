@@ -1,20 +1,38 @@
 # コース機能：検証環境の準備と公開前の確認
 
+**2026-09-19更新：以下の専用プロジェクト手順はローカル検証用。ステージング・本番にはクライアント所有の既存 `DawgStrength_dev` を使う。既存プロジェクトへ従来の初期SQLを実行せず、[クライアント環境への導入手順](client-staging-setup.md)の専用SQLを使う。**
+
 現在のリポジトリに認証・コース管理・受講・決済連携を追加している。
-実環境へのSQL適用、Supabaseプロジェクト作成、Stripe設定、本番デプロイは未実施。
+2026-09-18時点：専用Supabase検証プロジェクト作成、SQL適用、会員登録・メール確認・
+ログイン、管理者設定、デモ教材投入、管理画面からのMP4アップロード・レッスンへの設定、
+受講画面での動画再生まで確認済み。Stripe設定とVercelデプロイは未実施。
 接続情報がない状態では準備中の画面を表示し、購入や教材アクセスを許可しない。
 
+次の作業は [ステージング移行の確認表](staging-readiness.md) を参照。
+
+## ローカルでサンプル画面を見る
+
+`npm run dev` で起動して `/preview` を開くと、Supabase接続前でもサンプルの受講画面・
+コース概要・レッスン・教材管理・会員管理を確認できる。上部の切替リンクで画面を移動する。
+説明文エディタは操作できるが、変更の保存・アップロード・購入は行わない。
+動画部分は配置イメージ。実教材や実会員は読み込まない。本番モードではこのURLは404になる。
+
 ## 1. 専用のSupabase検証プロジェクト
+
+ブラウザのSQL Editorで進める場合は、[SQL Editor用の手順書](supabase-sql-editor-setup.md)を順番に実行する。
+一括作成・確認・管理者設定のSQLへのリンクをまとめてある。
 
 1. クライアントが管理できる組織内に、このアプリ専用の検証プロジェクトを新規作成する。
    初期検証はFreeでも可能。課金プランの変更は実教材の容量を見て決める。
 2. `.env.example` を参考に、Git対象外の `.env.local` に以下を設定する。
    `NEXT_PUBLIC_SUPABASE_URL`、`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`、`SUPABASE_SERVICE_ROLE_KEY`。
-   service roleキーには絶対に `NEXT_PUBLIC_` を付けない。チャットや要望ファイルにも保存しない。
+   サーバー用変数 `SUPABASE_SERVICE_ROLE_KEY` の値には新しいSecret keyを指定できる。
+   この変数には絶対に `NEXT_PUBLIC_` を付けない。キーはチャットや要望ファイルにも保存しない。
 3. SQL Editorで `supabase/migrations/202609080001_course_platform.sql` を一度適用する。
-   既存の別アプリのDBに実行しない。Supabase CLIを使う場合はプロジェクトを確認してから `supabase db push`。
+   既存の別アプリのDBに実行しない。SQL Editorで適用した後にCLIを使う場合は、先に履歴を同期する。
 4. AuthのEmailプロバイダとメール確認を有効にし、パスワード最小長を10以上にする。
-   Site URLとRedirect URLsに検証サイトのURL、`http://localhost:3000/auth/callback**` を登録する。
+   Site URLは `http://127.0.0.1:3000`、Redirect URLsは `http://127.0.0.1:3000/auth/callback**` と
+   `http://localhost:3000/auth/callback**` を登録する。
    公開時はコースドメインの `/auth/callback**` を追加する。
 5. Authのメール送信用SMTPを設定する。既存お問い合わせ用Resend設定とは別設定。
    この実装はPKCEを使うため、登録・パスワード再設定のメールは操作した同じブラウザで開く。
