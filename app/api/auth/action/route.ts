@@ -12,7 +12,7 @@ import { requestOrigin } from "@/lib/courses/request-origin";
 const input = z.object({
   action: z.enum(["signup", "signin", "reset", "update", "signout"]),
   email: z.string().email().max(254).optional(),
-  password: z.string().min(10).max(128).optional(),
+  password: z.string().min(8).max(128).optional(),
   name: z.string().trim().max(120).optional(),
   next: z.string().optional(),
 });

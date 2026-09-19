@@ -120,13 +120,13 @@ export function AuthForm({
                 name="password"
                 type="password"
                 required
-                minLength={10}
+                minLength={8}
                 maxLength={128}
                 autoComplete={
                   mode === "signin" ? "current-password" : "new-password"
                 }
               />
-              <small>At least 10 characters.</small>
+              <small>At least 8 characters.</small>
             </label>
           )}
           {mode === "signin" && (
