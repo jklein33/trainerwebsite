@@ -7,6 +7,7 @@ import {
   requireSameOrigin,
 } from "@/lib/courses/server";
 import { safeReturnPath } from "@/lib/courses/validation";
+import { requestOrigin } from "@/lib/courses/request-origin";
 
 const input = z.object({
   action: z.enum(["signup", "signin", "reset", "update", "signout"]),
@@ -21,7 +22,7 @@ export async function POST(request: Request) {
     const body = input.parse(await readBody(request));
     const db = await serverClient();
     const next = safeReturnPath(body.next);
-    const origin = new URL(request.url).origin;
+    const origin = requestOrigin(request);
     if (body.action === "signout") {
       const { error } = await db.auth.signOut();
       if (error) throw error;
@@ -64,7 +65,7 @@ export async function POST(request: Request) {
       if (error) throw new CourseError(error.message);
       return Response.json({
         message:
-          "Check your email to confirm your account, then sign in to continue.",
+          "For a new account, check your email and open the confirmation link in this same browser. If you already confirmed your email, sign in with your password instead.",
       });
     }
     const { error } = await db.auth.signInWithPassword({

@@ -89,7 +89,9 @@ export function AuthForm({
           <p className="academy-error">
             {errorHint === "access"
               ? "Account access is unavailable. Please contact support."
-              : "This link has expired. Request a new email and try again."}
+              : errorHint === "link-browser"
+                ? "We could not complete verification in this browser. Open the latest email link in the browser where you requested it. If you were confirming your account, try signing in below: your email may already be confirmed."
+                : "We could not complete this email link. It may have already been used, expired, or opened in a different browser. If you were confirming your account, try signing in below before requesting another email."}
           </p>
         )}
         <form onSubmit={submit}>

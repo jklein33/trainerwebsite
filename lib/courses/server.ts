@@ -2,6 +2,7 @@ import "server-only";
 import { serverClient } from "@/lib/supabase/server";
 import { supabaseConfigured } from "@/lib/supabase/env";
 import { redirect } from "next/navigation";
+import { isSameOrigin } from "@/lib/courses/request-origin";
 
 export class CourseError extends Error {
   constructor(
@@ -56,7 +57,7 @@ export async function pageContext(admin = false) {
   }
 }
 export function requireSameOrigin(request: Request) {
-  if (request.headers.get("origin") !== new URL(request.url).origin)
+  if (!isSameOrigin(request))
     throw new CourseError("Invalid request origin.", 403);
 }
 export async function readBody(request: Request) {

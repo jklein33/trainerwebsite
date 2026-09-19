@@ -10,6 +10,7 @@ import {
 import { serviceClient } from "@/lib/supabase/admin";
 import { stripeClient } from "@/lib/courses/payments";
 import { uuid } from "@/lib/courses/validation";
+import { requestOrigin } from "@/lib/courses/request-origin";
 export async function POST(request: Request) {
   try {
     requireSameOrigin(request);
@@ -71,7 +72,7 @@ export async function POST(request: Request) {
         409,
       );
     }
-    const origin = new URL(request.url).origin;
+    const origin = requestOrigin(request);
     const session = await stripe.checkout.sessions.create(
       {
         mode: "payment",
