@@ -78,7 +78,14 @@ export function ContentForm({
       event.returnValue = "";
     };
     const followLink = (event: MouseEvent) => {
-      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      if (
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      )
+        return;
       const anchor =
         event.target instanceof Element
           ? event.target.closest("a[href]")
@@ -91,9 +98,12 @@ export function ContentForm({
         return;
       event.preventDefault();
       event.stopImmediatePropagation();
+      // A save cannot be cancelled by navigating away once the request is sent.
+      if (busy) return;
       const url = new URL(anchor.getAttribute("href")!, window.location.href);
       leaveAction.current = () => {
-        if (url.origin === window.location.origin) router.push(url.pathname + url.search + url.hash);
+        if (url.origin === window.location.origin)
+          router.push(url.pathname + url.search + url.hash);
         else window.location.assign(url.href);
       };
       discardDialog.current?.showModal();
@@ -108,7 +118,10 @@ export function ContentForm({
   function close() {
     if (busy) return;
     if (dirty || pending) {
-      leaveAction.current = () => { onDone(); router.refresh(); };
+      leaveAction.current = () => {
+        onDone();
+        router.refresh();
+      };
       discardDialog.current?.showModal();
       return;
     }
@@ -214,7 +227,7 @@ export function ContentForm({
       </div>
       <p className="academy-muted academy-small">
         {type === "lesson"
-          ? "Everything for this lesson, in one place. Uploads are private until you save and publish the lesson."
+          ? "Everything for this lesson, in one place. Save to apply your video, description, and resource changes."
           : "Changes are applied when you save."}
       </p>
       <fieldset disabled={busy} className="academy-authoring-fields">
@@ -282,6 +295,7 @@ export function ContentForm({
             </label>
             {resolvedCourseId ? (
               <MediaField
+                disabled={busy}
                 kind="image"
                 courseId={resolvedCourseId}
                 assets={allAssets}
@@ -304,6 +318,7 @@ export function ContentForm({
           <>
             {resolvedCourseId && (
               <MediaField
+                disabled={busy}
                 kind="video"
                 courseId={resolvedCourseId}
                 assets={allAssets}
@@ -329,6 +344,7 @@ export function ContentForm({
             </div>
             {resolvedCourseId && (
               <MediaField
+                disabled={busy}
                 kind="attachment"
                 courseId={resolvedCourseId}
                 assets={allAssets}
@@ -401,16 +417,36 @@ export function ContentForm({
           </button>
         </div>
       </div>
-      <dialog ref={discardDialog} className="academy-discard-dialog" aria-labelledby="discard-editor-title" aria-describedby="discard-editor-description">
+      <dialog
+        ref={discardDialog}
+        className="academy-discard-dialog"
+        aria-labelledby="discard-editor-title"
+        aria-describedby="discard-editor-description"
+      >
         <h2 id="discard-editor-title">Leave without saving?</h2>
-        <p id="discard-editor-description">Your unsaved edits will be discarded and pending uploads will stop. Completed uploads stay in the media library.</p>
+        <p id="discard-editor-description">
+          Your unsaved edits will be discarded and pending uploads will stop.
+          Completed uploads stay in the media library.
+        </p>
         <div className="academy-inline">
-          <button type="button" className="academy-button" onClick={() => discardDialog.current?.close()}>Keep editing</button>
-          <button type="button" className="academy-secondary" onClick={() => {
-            allowLeave.current = true;
-            discardDialog.current?.close();
-            leaveAction.current?.();
-          }}>Discard changes</button>
+          <button
+            type="button"
+            className="academy-button"
+            onClick={() => discardDialog.current?.close()}
+          >
+            Keep editing
+          </button>
+          <button
+            type="button"
+            className="academy-secondary"
+            onClick={() => {
+              allowLeave.current = true;
+              discardDialog.current?.close();
+              leaveAction.current?.();
+            }}
+          >
+            Discard changes
+          </button>
         </div>
       </dialog>
     </form>

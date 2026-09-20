@@ -13,6 +13,7 @@ export function MediaField({
   onChange,
   onUploaded,
   onPendingChange,
+  disabled = false,
 }: {
   kind: Asset["kind"];
   courseId: string;
@@ -21,6 +22,7 @@ export function MediaField({
   onChange: (ids: string[]) => void;
   onUploaded: (asset: Asset) => void;
   onPendingChange: (pending: boolean) => void;
+  disabled?: boolean;
 }) {
   const available = assets.filter(
     (asset) =>
@@ -105,6 +107,7 @@ export function MediaField({
         );
       })}
       <Uploader
+        disabled={disabled}
         courseId={courseId}
         assets={assets}
         fixedKind={kind}

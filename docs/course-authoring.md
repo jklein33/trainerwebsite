@@ -17,6 +17,9 @@ and resources in one place.
 - The editor stays open after saving and shows its saved state. Failed saves keep
   the entered content. Closing the editor or following a link with unsaved changes
   asks for confirmation; reloading/closing the browser also requests confirmation.
+- While saving, form controls, file drops, and normal link navigation are blocked
+  until the request finishes. The file picker uses English labels independently
+  of the browser's language; the operating system's picker keeps its own language.
 - **Course settings** includes a thumbnail upload and preview. A new course must
   be saved once before its thumbnail can be uploaded.
 - The collapsed **Media library** remains available for reuse, upload recovery,
@@ -45,3 +48,16 @@ of the same lesson uses the existing last-save-wins behavior.
 Upload completion is separate from lesson saving. Unattached completed uploads
 are retained in the media library for reuse; this feature does not silently
 delete files. Word resources are downloads, not an embedded document editor.
+
+## Verification
+
+Local browser checks cover the discard dialog (keep editing, discard, and link
+navigation), mobile layout without horizontal overflow, pending uploads blocking
+saves, and retaining edits/files after unauthenticated save/upload failures.
+These checks used a temporary development fixture, removed afterwards.
+
+The automated lesson persistence tests cover retries after partial writes and
+lost responses, attachment reconciliation, and preserving the existing video
+when attaching a resource fails. An authenticated staging check is still needed
+for upload completion, inline playback, and saving/reopening a real lesson with
+its resources. It requires a signed-in administrator in the browser.

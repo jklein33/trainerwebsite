@@ -16,12 +16,14 @@ export function Uploader({
   onComplete,
   fixedKind,
   onPendingChange,
+  disabled = false,
 }: {
   courseId: string;
   assets: Asset[];
   onComplete: (asset: Asset) => void;
   fixedKind?: Asset["kind"];
   onPendingChange?: (pending: boolean) => void;
+  disabled?: boolean;
 }) {
   const [kind, setKind] = useState<"video" | "image" | "attachment">(
       fixedKind ?? "video",
@@ -53,7 +55,7 @@ export function Uploader({
     };
   }, []);
   async function start() {
-    if (!file) return;
+    if (!file || busy || disabled) return;
     setBusy(true);
     setCanPause(false);
     setError("");
@@ -209,7 +211,7 @@ export function Uploader({
     }
   }
   function chooseFile(next: File | null) {
-    if (busy) return;
+    if (busy || disabled) return;
     setError("");
     if (!next) return;
     try {
@@ -236,7 +238,7 @@ export function Uploader({
       className={`academy-upload ${fixedKind ? "academy-upload-inline" : ""} ${dragging ? "is-dragging" : ""}`}
       onDragOver={(event) => {
         event.preventDefault();
-        if (!busy) setDragging(true);
+        if (!busy && !disabled) setDragging(true);
       }}
       onDragLeave={() => setDragging(false)}
       onDrop={(event) => {
@@ -270,7 +272,7 @@ export function Uploader({
             File type
             <select
               value={kind}
-              disabled={busy}
+              disabled={busy || disabled}
               onChange={(e) => {
                 setKind(e.target.value as typeof kind);
                 setFile(null);
@@ -286,12 +288,14 @@ export function Uploader({
             </select>
           </label>
         )}
-        <label>
-          Choose file
+        <label
+          className={`academy-file-picker ${busy || disabled ? "is-disabled" : ""}`}
+        >
+          <span>Choose file</span>
           <input
             key={`${kind}-${inputVersion}`}
             type="file"
-            disabled={busy}
+            disabled={busy || disabled}
             accept={
               kind === "video"
                 ? ".mp4"
@@ -305,7 +309,7 @@ export function Uploader({
         <button
           className="academy-button"
           type="button"
-          disabled={!file || busy}
+          disabled={!file || busy || disabled}
           onClick={start}
         >
           {busy
