@@ -1606,6 +1606,15 @@
   font-size: 0.75rem;
   margin-top: 12px;
 }
+.academy-lesson-media-summary .academy-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.academy-lesson-media-summary .academy-text-link > svg {
+  flex-shrink: 0;
+}
 @keyframes academy-editor-enter {
   from {
     opacity: 0;
