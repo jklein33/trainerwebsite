@@ -10,6 +10,7 @@ import {
   Pencil,
   Archive,
   Trash2,
+  Eye,
 } from "lucide-react";
 import type {
   Course,
@@ -21,6 +22,7 @@ import type {
 import { callApi } from "./ui";
 import { ContentForm } from "./content-form";
 import { Uploader } from "./uploader";
+import { AuthorPreview } from "./author-preview";
 
 type Editing = {
   type: "course" | "module" | "lesson";
@@ -45,6 +47,7 @@ export function AdminCourse({
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
     [notice, setNotice] = useState("");
+  const [preview, setPreview] = useState<{ lessonId?: string } | null>(null);
   async function action(task: () => Promise<unknown>) {
     setBusy(true);
     setError("");
@@ -190,6 +193,7 @@ export function AdminCourse({
           courseId={course.id}
           assets={assets}
           attachments={attachments}
+          previewContext={{ course, modules, lessons }}
           onDone={() => {
             setEditing(null);
             window.scrollTo({ top: 0, behavior: "instant" });
@@ -219,9 +223,13 @@ export function AdminCourse({
           >
             Course settings
           </button>
-          <Link className="academy-secondary" href={`/learn/${course.id}`}>
-            Open learner view
-          </Link>
+          <button
+            type="button"
+            className="academy-secondary"
+            onClick={() => setPreview({})}
+          >
+            <Eye size={17} /> Preview course
+          </button>
         </div>
       </div>
       {error && (
@@ -285,6 +293,13 @@ export function AdminCourse({
                   <button
                     type="button"
                     className="academy-text-link"
+                    onClick={() => setPreview({ lessonId: lesson.id })}
+                  >
+                    <Eye size={15} /> Preview lesson
+                  </button>
+                  <button
+                    type="button"
+                    className="academy-text-link"
                     onClick={() =>
                       setEditing({
                         type: "lesson",
@@ -309,6 +324,19 @@ export function AdminCourse({
           </section>
         );
       })}
+      {preview && (
+        <AuthorPreview
+          data={{
+            course,
+            modules,
+            lessons,
+            assets,
+            attachments,
+            initialLessonId: preview.lessonId,
+          }}
+          onClose={() => setPreview(null)}
+        />
+      )}
       <details className="academy-library-panel">
         <summary>
           Media library{" "}

@@ -4,8 +4,7 @@ import { ArrowLeft, ArrowRight, Play } from "lucide-react";
 import { pageContext, checked } from "@/lib/courses/server";
 import { supabaseConfigured } from "@/lib/supabase/env";
 import { SetupNotice } from "@/components/courses/setup-notice";
-import { CoursePlayer, DownloadAsset } from "@/components/courses/player";
-import { RichText } from "@/components/courses/rich-text";
+import { LessonContent } from "@/components/courses/learner-content";
 export default async function LessonPage({
   params,
 }: {
@@ -61,29 +60,11 @@ export default async function LessonPage({
       </Link>
       <div className="academy-lesson-layout">
         <article>
-          <span className="academy-eyebrow">{module.title}</span>
-          <h1 className="academy-lesson-title">{lesson.title}</h1>
-          {lesson.video_asset_id ? (
-            <CoursePlayer
-              key={lesson.video_asset_id}
-              assetId={lesson.video_asset_id}
-              title={lesson.title}
-            />
-          ) : (
-            <div className="academy-notice">This video is being updated.</div>
-          )}
-          <section className="academy-lesson-notes">
-            <h2>Lesson notes</h2>
-            <RichText document={lesson.description} />
-          </section>
-          {assets.length > 0 && (
-            <section className="academy-resources">
-              <h2>Your resources</h2>
-              {assets.map((asset) => (
-                <DownloadAsset key={asset.id} id={asset.id} name={asset.name} />
-              ))}
-            </section>
-          )}
+          <LessonContent
+            lesson={lesson}
+            moduleTitle={module.title}
+            assets={assets}
+          />
           {next && (
             <Link
               className="academy-button"

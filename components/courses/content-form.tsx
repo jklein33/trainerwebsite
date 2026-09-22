@@ -13,7 +13,8 @@ import type {
 import { callApi } from "./ui";
 import { DescriptionEditor } from "./editor";
 import { MediaField } from "./media-field";
-import { CheckCircle2, LoaderCircle } from "lucide-react";
+import { CheckCircle2, Eye, LoaderCircle } from "lucide-react";
+import { AuthorPreview, type AuthorPreviewData } from "./author-preview";
 export function ContentForm({
   type,
   item,
@@ -21,6 +22,7 @@ export function ContentForm({
   assets = [],
   courseId,
   attachments = [],
+  previewContext,
   onDone,
 }: {
   type: "course" | "module" | "lesson";
@@ -29,12 +31,15 @@ export function ContentForm({
   assets?: Asset[];
   courseId?: string;
   attachments?: Attachment[];
+  previewContext?: { course: Course; modules: Module[]; lessons: Lesson[] };
   onDone: () => void;
 }) {
   const router = useRouter(),
     [busy, setBusy] = useState(false),
     [error, setError] = useState("");
   const [savedId, setSavedId] = useState(item?.id);
+  const formRef = useRef<HTMLFormElement>(null);
+  const [preview, setPreview] = useState<AuthorPreviewData | null>(null);
   const [creationId] = useState(() => crypto.randomUUID());
   const [dirty, setDirty] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -145,6 +150,90 @@ export function ContentForm({
       ? item.description
       : { type: "doc", content: [] },
   );
+  function openPreview() {
+    if (!formRef.current || busy) return;
+    // Keep the editor's player from playing behind the preview's player.
+    formRef.current.querySelectorAll("video").forEach((video) => video.pause());
+    const form = new FormData(formRef.current);
+    const id = savedId ?? creationId;
+    const title = String(form.get("title") ?? "").trim() || `Untitled ${type}`;
+    const position = Number(form.get("position")) || 0;
+    const course = previewContext?.course ?? {
+      title: "Untitled course",
+      summary: "",
+      thumbnail_asset_id: null,
+      status: "draft" as const,
+    };
+    let modules = previewContext?.modules ?? [];
+    let lessons = previewContext?.lessons ?? [];
+    let links = attachments;
+    if (type === "module") {
+      modules = [
+        ...modules.filter((entry) => entry.id !== id),
+        {
+          id,
+          course_id: resolvedCourseId ?? "",
+          title,
+          position,
+          status: publishStatus,
+          created_at: item?.created_at ?? new Date().toISOString(),
+        },
+      ];
+    }
+    if (type === "lesson") {
+      if (!modules.some((entry) => entry.id === parentId))
+        modules = [
+          ...modules,
+          {
+            id: parentId ?? "new-module",
+            course_id: resolvedCourseId ?? "",
+            title: "New module",
+            position: 0,
+            status: "draft",
+            created_at: "",
+          },
+        ];
+      lessons = [
+        ...lessons.filter((entry) => entry.id !== id),
+        {
+          id,
+          module_id: parentId ?? "new-module",
+          title,
+          description,
+          video_asset_id: videoId,
+          status: publishStatus,
+          position,
+          created_at: item?.created_at ?? new Date().toISOString(),
+        },
+      ];
+      links = [
+        ...attachments.filter((entry) => entry.lesson_id !== id),
+        ...resourceIds.map((assetId) => ({
+          id: `${id}-${assetId}`,
+          lesson_id: id,
+          asset_id: assetId,
+        })),
+      ];
+    }
+    setPreview({
+      course:
+        type === "course"
+          ? {
+              title,
+              summary: String(form.get("summary") ?? ""),
+              thumbnail_asset_id: thumbnailId,
+              status: publishStatus,
+            }
+          : course,
+      modules,
+      lessons,
+      assets: allAssets,
+      attachments: links,
+      initialLessonId: type === "lesson" ? id : undefined,
+      unsaved: dirty || !savedId,
+      pending,
+    });
+  }
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (pending || busy) return;
@@ -208,6 +297,7 @@ export function ContentForm({
   }
   return (
     <form
+      ref={formRef}
       className="academy-content-form academy-authoring"
       onSubmit={submit}
       onChangeCapture={changed}
@@ -216,14 +306,24 @@ export function ContentForm({
         <h2>
           {savedId ? "Edit" : "New"} {type}
         </h2>
-        <button
-          type="button"
-          disabled={busy}
-          onClick={close}
-          className="academy-text-link"
-        >
-          Back
-        </button>
+        <div className="academy-inline">
+          <button
+            type="button"
+            className="academy-secondary"
+            disabled={busy}
+            onClick={openPreview}
+          >
+            <Eye size={17} /> Preview
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={close}
+            className="academy-text-link"
+          >
+            Back
+          </button>
+        </div>
       </div>
       <p className="academy-muted academy-small">
         {type === "lesson"
@@ -397,6 +497,14 @@ export function ContentForm({
         </span>
         <div className="academy-inline">
           <button
+            type="button"
+            className="academy-secondary"
+            disabled={busy}
+            onClick={openPreview}
+          >
+            <Eye size={17} /> Preview
+          </button>
+          <button
             type="submit"
             className="academy-button"
             disabled={busy || pending}
@@ -417,6 +525,9 @@ export function ContentForm({
           </button>
         </div>
       </div>
+      {preview && (
+        <AuthorPreview data={preview} onClose={() => setPreview(null)} />
+      )}
       <dialog
         ref={discardDialog}
         className="academy-discard-dialog"

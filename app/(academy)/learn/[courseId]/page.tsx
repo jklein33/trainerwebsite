@@ -4,7 +4,8 @@ import { Play, ArrowLeft, Lock } from "lucide-react";
 import { pageContext, checked } from "@/lib/courses/server";
 import { supabaseConfigured } from "@/lib/supabase/env";
 import { SetupNotice } from "@/components/courses/setup-notice";
-import { MediaImage, PurchaseButton } from "@/components/courses/ui";
+import { PurchaseButton } from "@/components/courses/ui";
+import { CourseHero } from "@/components/courses/learner-content";
 import { ModuleMap } from "@/components/courses/module-map";
 export default async function CoursePage({
   params,
@@ -51,19 +52,13 @@ export default async function CoursePage({
       <Link className="academy-back" href="/learn">
         <ArrowLeft size={15} /> All courses
       </Link>
-      <section className="academy-course-hero">
-        <div>
-          <span className="academy-eyebrow">DAWG STRENGTH / COURSE</span>
-          <h1>{course.title}</h1>
-          <p>{course.summary}</p>
-          {!owned ? (
-            <PurchaseButton courseId={courseId} />
-          ) : (
-            <span className="academy-pill">Your access is active</span>
-          )}
-        </div>
-        <MediaImage id={course.thumbnail_asset_id} alt={course.title} />
-      </section>
+      <CourseHero course={course}>
+        {!owned ? (
+          <PurchaseButton courseId={courseId} />
+        ) : (
+          <span className="academy-pill">Your access is active</span>
+        )}
+      </CourseHero>
       {owned ? (
         <>
           <div className="academy-section-heading">
