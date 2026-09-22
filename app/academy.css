@@ -1390,6 +1390,11 @@
 .academy-upload-status {
   overflow-wrap: anywhere;
 }
+.academy-upload-status > svg {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 6px;
+}
 .academy-upload progress {
   height: 8px;
   border-radius: 5px;

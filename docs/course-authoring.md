@@ -4,8 +4,10 @@ Open a course in **Manage → Courses**, then choose **Add lesson**, the pencil 
 or **Edit lesson & media**. The editor keeps the lesson's title, video, description,
 and resources in one place.
 
-- Choose or drop a file into the relevant upload area, then select **Upload file**.
-  Completed uploads are selected automatically. Preview the video in the editor;
+- Choose or drop a file into the relevant upload area to start uploading immediately.
+  Progress and completion are shown in place; there is no separate upload button.
+  Use **Pause upload** / **Resume upload** to pause and continue, or **Retry upload**
+  after a failure. Completed uploads are selected automatically. Preview the video in the editor;
   resources can be downloaded for inspection. Add resources one at a time.
 - **Choose an existing file/video/image** reuses a ready file from the same course.
 - **Save changes** saves a draft or archived item. Selecting **Published** changes
@@ -55,6 +57,9 @@ Local browser checks cover the discard dialog (keep editing, discard, and link
 navigation), mobile layout without horizontal overflow, pending uploads blocking
 saves, and retaining edits/files after unauthenticated save/upload failures.
 These checks used a temporary development fixture, removed afterwards.
+File selection was also checked for automatic video and resource upload startup,
+the retry action after a failed request, and restoring save availability after
+discarding a failed upload. No separate upload confirmation is required.
 
 The automated lesson persistence tests cover retries after partial writes and
 lost responses, attachment reconciliation, and preserving the existing video

@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Upload } from "tus-js-client";
-import { UploadCloud } from "lucide-react";
+import { CheckCircle2, LoaderCircle, UploadCloud } from "lucide-react";
 import { browserClient } from "@/lib/supabase/browser";
 import { supabaseEnvironment } from "@/lib/supabase/env";
 import { courseStorageConfig } from "@/lib/courses/config";
@@ -35,6 +35,13 @@ export function Uploader({
   const [inputVersion, setInputVersion] = useState(0);
   const [dragging, setDragging] = useState(false);
   const [canPause, setCanPause] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const [completedName, setCompletedName] = useState("");
+  const inFlight = useRef(false);
+  function setUploading(value: boolean) {
+    inFlight.current = value;
+    setBusy(value);
+  }
   useEffect(() => {
     onPendingChange?.(busy || file !== null);
   }, [busy, file, onPendingChange]);
@@ -54,10 +61,13 @@ export function Uploader({
       void upload.current?.abort();
     };
   }, []);
-  async function start() {
-    if (!file || busy || disabled) return;
-    setBusy(true);
+  async function start(file: File) {
+    if (inFlight.current || disabled) return;
+    setUploading(true);
+    onPendingChange?.(true);
     setCanPause(false);
+    setPaused(false);
+    setCompletedName("");
     setError("");
     try {
       validateUpload(file.name, kind, file.size);
@@ -82,10 +92,13 @@ export function Uploader({
         );
       if (previousAsset?.status === "ready") {
         completed.current(previousAsset);
+        setCompletedName(file.name);
         clearResume();
         setFile(null);
         setInputVersion((value) => value + 1);
-        setBusy(false);
+        setUploading(false);
+        pendingAsset.current = null;
+        uploaded.current = false;
         return;
       }
       const pending =
@@ -119,10 +132,11 @@ export function Uploader({
         );
         if (!active.current) return;
         completed.current({ ...asset, status: "ready" });
+        setCompletedName(file.name);
         clearResume();
         setFile(null);
         setInputVersion((value) => value + 1);
-        setBusy(false);
+        setUploading(false);
         pendingAsset.current = null;
         uploaded.current = false;
         return;
@@ -167,7 +181,7 @@ export function Uploader({
           setError(
             "Upload interrupted. Retry to continue. Your edits are kept.",
           );
-          setBusy(false);
+          setUploading(false);
         },
         onSuccess: async () => {
           if (!active.current) return;
@@ -181,6 +195,7 @@ export function Uploader({
             );
             if (!active.current) return;
             completed.current({ ...asset, status: "ready" });
+            setCompletedName(file.name);
             clearResume();
             setFile(null);
             setInputVersion((value) => value + 1);
@@ -195,7 +210,7 @@ export function Uploader({
             );
             router.refresh();
           } finally {
-            setBusy(false);
+            setUploading(false);
           }
         },
       });
@@ -207,13 +222,15 @@ export function Uploader({
       task.start();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed.");
-      setBusy(false);
+      setUploading(false);
     }
   }
   function chooseFile(next: File | null) {
-    if (busy || disabled) return;
-    setError("");
+    if (inFlight.current || disabled) return;
     if (!next) return;
+    setError("");
+    setCompletedName("");
+    setPaused(false);
     try {
       validateUpload(next.name, kind, next.size);
       if (
@@ -227,6 +244,7 @@ export function Uploader({
       }
       setProgress(0);
       setFile(next);
+      void start(next);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unsupported file.");
       setFile(null);
@@ -244,6 +262,11 @@ export function Uploader({
       onDrop={(event) => {
         event.preventDefault();
         setDragging(false);
+        if (inFlight.current || disabled) return;
+        if (event.dataTransfer.files.length > 1) {
+          setError("Choose one file at a time.");
+          return;
+        }
         chooseFile(event.dataTransfer.files[0] ?? null);
       }}
     >
@@ -265,6 +288,9 @@ export function Uploader({
               ? "Drop a JPG or PNG here, or choose a file. Up to 25 MB."
               : "Drop a PDF, Word document, or image here. Up to 25 MB per file."}
         </p>
+        <p className="academy-small academy-muted">
+          Upload starts automatically when you choose a file.
+        </p>
       </div>
       <div className="academy-upload-fields">
         {!fixedKind && (
@@ -280,6 +306,8 @@ export function Uploader({
                 uploaded.current = false;
                 setError("");
                 setProgress(0);
+                setPaused(false);
+                setCompletedName("");
               }}
             >
               <option value="video">Lesson video</option>
@@ -306,28 +334,35 @@ export function Uploader({
             onChange={(e) => chooseFile(e.target.files?.[0] ?? null)}
           />
         </label>
-        <button
-          className="academy-button"
-          type="button"
-          disabled={!file || busy || disabled}
-          onClick={start}
-        >
-          {busy
-            ? progress === 100
-              ? "Finishing upload…"
-              : `Uploading ${progress}%`
-            : pendingAsset.current
-              ? "Retry upload"
-              : "Upload file"}
-        </button>
         {file && (
           <p className="academy-upload-status" role="status">
             {file.name} · {(file.size / 1024 ** 2).toFixed(1)} MB
-            {!busy && !error ? " · Ready to upload" : ""}
+            {paused ? " · Paused" : ""}
+          </p>
+        )}
+        {completedName && (
+          <p
+            className="academy-upload-status academy-save-success"
+            role="status"
+          >
+            <CheckCircle2 size={17} aria-hidden="true" /> {completedName} ·
+            Uploaded
           </p>
         )}
         {busy && (
           <>
+            <p className="academy-upload-status" role="status">
+              <LoaderCircle
+                size={17}
+                className="academy-spin"
+                aria-hidden="true"
+              />{" "}
+              {progress === 100
+                ? "Finishing upload…"
+                : canPause
+                  ? `Uploading ${progress}%`
+                  : "Starting upload…"}
+            </p>
             <progress value={progress} max={100} aria-label="Upload progress" />
             <button
               type="button"
@@ -340,8 +375,9 @@ export function Uploader({
                   .abort()
                   .then(() => {
                     if (!active.current) return;
-                    setBusy(false);
-                    setError("Upload paused. Retry to continue.");
+                    setUploading(false);
+                    setPaused(true);
+                    setError("");
                   })
                   .catch(() => {
                     if (!active.current) return;
@@ -356,12 +392,23 @@ export function Uploader({
         )}
         {file && !busy && (
           <button
+            className="academy-button"
+            type="button"
+            disabled={disabled}
+            onClick={() => void start(file)}
+          >
+            {paused ? "Resume upload" : "Retry upload"}
+          </button>
+        )}
+        {file && !busy && (
+          <button
             type="button"
             className="academy-text-link"
             onClick={() => {
               setFile(null);
               setError("");
               setProgress(0);
+              setPaused(false);
               pendingAsset.current = null;
               uploaded.current = false;
               setInputVersion((value) => value + 1);
