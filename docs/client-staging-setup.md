@@ -2,6 +2,19 @@
 
 対象：クライアントの `DawgStrength_dev`。開発者所有のローカル検証DBとは別。
 
+## MOV対応の追加設定（既存環境）
+
+Storageの許可形式に `video/quicktime` を追加する。
+SQL Editorでは [04-allow-course-staging-mov.sql](../supabase/sql-editor/04-allow-course-staging-mov.sql) を実行する。
+初期インストールSQLの再実行は不要。既存ファイル、非公開設定、サイズ上限、他バケットは変更しない。
+APIから設定する場合は `node scripts/enable-course-mov.mjs --project-ref <PROJECT_REF>` で確認し、
+同じコマンドに `--apply` を付けて適用する。接続キーは既存の `.env.local` から読み込み、出力しない。
+`public` スキーマの専用環境には `202609220001_allow_course_mov.sql` を適用する。
+自動変換用サーバーや外部サービスは不要。MOVの再生互換性は保証されないため、必要に応じて
+レッスン編集画面から変換済みMP4へ差し替える。
+現在接続している `DawgStrength_dev` の `course-staging-media` にはAPIで適用済み。
+適用後、既存の許可形式・非公開設定・5GBのバケット上限が維持されていることを確認済み。
+
 ## 確認できた状態（2026-09-19）
 
 ユーザー提供の読み取り専用SQL結果では、`public` に12テーブルと5ビューがある。

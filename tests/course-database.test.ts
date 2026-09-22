@@ -89,6 +89,61 @@ for (const schema of ["public", "course_staging"] as const) {
       );
     }
     await db.exec(migration);
+    await t.test(
+      "MOV upgrade is repeatable and preserves bucket limits, privacy and other buckets",
+      async () => {
+        const upgrade = await readFile(
+          new URL(
+            schema === "public"
+              ? "../supabase/migrations/202609220001_allow_course_mov.sql"
+              : "../supabase/sql-editor/04-allow-course-staging-mov.sql",
+            import.meta.url,
+          ),
+          "utf8",
+        );
+        await db.exec(`update storage.buckets set allowed_mime_types=array_append(array_remove(allowed_mime_types,'video/quicktime'),'application/zip') where id='course-media';
+        insert into storage.buckets(id,name,public,file_size_limit,allowed_mime_types) values('unrelated-mov-fixture','unrelated-mov-fixture',true,123,array['image/png']);`);
+        const before = (
+          await engine.query<{ id: string; allowed_mime_types: string[] }>(
+            "select * from storage.buckets order by id",
+          )
+        ).rows;
+        await engine.exec(upgrade);
+        await engine.exec(upgrade);
+        const after = (
+          await engine.query("select * from storage.buckets order by id")
+        ).rows;
+        assert.deepEqual(
+          after,
+          before.map((row) =>
+            row.id === "unrelated-mov-fixture"
+              ? row
+              : {
+                  ...row,
+                  allowed_mime_types: [
+                    ...(row.allowed_mime_types as string[]),
+                    "video/quicktime",
+                  ],
+                },
+          ),
+        );
+        await db.exec(
+          "update storage.buckets set allowed_mime_types=null where id='course-media'",
+        );
+        await engine.exec(upgrade);
+        assert.equal(
+          (
+            await db.query<{ allowed_mime_types: string[] | null }>(
+              "select allowed_mime_types from storage.buckets where id='course-media'",
+            )
+          ).rows[0].allowed_mime_types,
+          null,
+        );
+        await db.exec(
+          "update storage.buckets set allowed_mime_types=array['video/mp4','video/quicktime','image/jpeg','image/png','application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document'] where id='course-media'; delete from storage.buckets where id='unrelated-mov-fixture';",
+        );
+      },
+    );
     if (schema === "course_staging") {
       await t.test(
         "staging preserves legacy tables without granting access",

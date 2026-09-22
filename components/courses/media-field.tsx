@@ -24,6 +24,13 @@ export function MediaField({
   onPendingChange: (pending: boolean) => void;
   disabled?: boolean;
 }) {
+  const replacingMov =
+    kind === "video" &&
+    selected.some((id) =>
+      assets.some(
+        (asset) => asset.id === id && asset.mime_type === "video/quicktime",
+      ),
+    );
   const available = assets.filter(
     (asset) =>
       asset.course_id === courseId &&
@@ -106,7 +113,16 @@ export function MediaField({
           </div>
         );
       })}
+      {replacingMov && (
+        <p className="academy-notice">
+          MOV playback depends on the browser and video encoding. Upload a
+          converted MP4 below for wider compatibility. The current lesson video
+          stays in place until the replacement finishes uploading and you save
+          the lesson. The original MOV stays in the media library.
+        </p>
+      )}
       <Uploader
+        mp4Replacement={replacingMov}
         disabled={disabled}
         courseId={courseId}
         assets={assets}

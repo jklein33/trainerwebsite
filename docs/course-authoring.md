@@ -10,6 +10,15 @@ and resources in one place.
   after a failure. Completed uploads are selected automatically. Preview the video in the editor;
   resources can be downloaded for inspection. Add resources one at a time.
 - **Choose an existing file/video/image** reuses a ready file from the same course.
+- Videos accept MP4 and MOV, up to 5 GB (also subject to the project's Storage limit).
+  MOV is stored without conversion, so browser playback is not guaranteed.
+  When a MOV is selected, **Choose MP4 replacement** uploads a separately converted
+  MP4 and selects it for that lesson. The current saved video is unchanged until
+  upload completion and **Save changes** / **Save & publish**. A failed upload or
+  closing without saving keeps the existing reference. The original MOV stays in
+  the media library, and other lessons using it are not changed. An existing MP4
+  from the same course can also be selected. Use H.264 video and AAC audio for
+  broad compatibility; renaming the extension does not convert a video.
 - **Save changes** saves a draft or archived item. Selecting **Published** changes
   the action to **Save & publish**; a published lesson requires a ready video.
 - Uploading a replacement does not immediately change the lesson's saved video.
@@ -79,6 +88,10 @@ discarding a failed upload. No separate upload confirmation is required.
 Draft preview checks cover course-to-lesson navigation, the next lesson, unsaved
 course titles/summaries and lesson titles/notes, an untitled new lesson, closing
 and reopening without losing input, Escape/focus restoration, and mobile width.
+MOV replacement checks cover the MP4-only replacement picker, automatic startup,
+retaining the selected MOV after an unauthenticated upload failure, and restoring
+the MP4/MOV picker when the selection is removed. Real MOV playback and a successful
+authenticated replacement still require an administrator session and test footage.
 
 The automated lesson persistence tests cover retries after partial writes and
 lost responses, attachment reconciliation, and preserving the existing video

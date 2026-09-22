@@ -56,7 +56,7 @@ where id = '00000000-0000-0000-0000-000000000000';
 ブラウザからTUSで直接送信するため、Next.jsサーバーに動画本体を経由させない。
 アップロード完了とサイズ一致を確認してから教材へ紐付けられる。
 
-- アプリ上限：MP4 5GB、JPEG/PNG/Word/PDF 25MB。
+- アプリ上限：MP4/MOV 5GB、JPEG/PNG/Word/PDF 25MB。
 - Supabase側の全体上限がさらに適用される。Freeは1ファイル50MBまで。
   大きい動画は対応プランとStorage SettingsのGlobal file size limitの変更が必要。
 - 最初は50MB未満のMP4でアップロード・中断再開・再生を確認する。

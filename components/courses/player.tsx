@@ -64,7 +64,10 @@ export function CoursePlayer({
           }}
           onError={() =>
             setError(
-              "Playback was interrupted. Check your connection and reload the video.",
+              video.current?.error?.code === 3 ||
+                video.current?.error?.code === 4
+                ? "Your browser cannot play this video. Please contact the course administrator for an MP4 version."
+                : "Playback was interrupted. Check your connection and reload the video.",
             )
           }
         />

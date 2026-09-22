@@ -51,6 +51,9 @@ commit;`,
 );
 
 const outputs = {
+  "04-allow-course-staging-mov.sql": scope(
+    await read("supabase/migrations/202609220001_allow_course_mov.sql"),
+  ),
   "01-install-course-staging.sql": install,
   "02-verify-course-staging.sql": scope(
     await read("supabase/sql-editor/02-verify-course-platform.sql"),

@@ -104,7 +104,9 @@ export function validateUpload(name: string, kind: string, size: number) {
     kind === "video"
       ? extension === "mp4"
         ? "video/mp4"
-        : null
+        : extension === "mov"
+          ? "video/quicktime"
+          : null
       : kind === "image"
         ? (
             {
@@ -118,7 +120,7 @@ export function validateUpload(name: string, kind: string, size: number) {
   if (!mime || !Number.isFinite(size) || size <= 0 || size > limit)
     throw new Error(
       kind === "video"
-        ? "Choose an MP4 up to 5 GB."
+        ? "Choose an MP4 or MOV up to 5 GB."
         : "Choose a supported file up to 25 MB.",
     );
   return { mime, extension };

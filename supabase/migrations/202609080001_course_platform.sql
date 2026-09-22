@@ -277,7 +277,7 @@ grant all on public.course_profiles,public.courses,public.course_modules,public.
 grant usage,select on sequence public.course_audit_log_id_seq to service_role;
 
 insert into storage.buckets(id,name,public,file_size_limit,allowed_mime_types)
-values('course-media','course-media',false,5368709120,array['video/mp4','image/jpeg','image/png','application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
+values('course-media','course-media',false,5368709120,array['video/mp4','video/quicktime','image/jpeg','image/png','application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
 on conflict(id) do update set public=false;
 create policy course_storage_admin on storage.objects for all to authenticated
 using(bucket_id='course-media' and public.course_is_admin())

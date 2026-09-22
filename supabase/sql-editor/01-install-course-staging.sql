@@ -291,7 +291,7 @@ grant all on course_staging.course_profiles,course_staging.courses,course_stagin
 grant usage,select on sequence course_staging.course_audit_log_id_seq to service_role;
 
 insert into storage.buckets(id,name,public,file_size_limit,allowed_mime_types)
-values('course-staging-media','course-staging-media',false,5368709120,array['video/mp4','image/jpeg','image/png','application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
+values('course-staging-media','course-staging-media',false,5368709120,array['video/mp4','video/quicktime','image/jpeg','image/png','application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
 ;
 create policy course_staging_storage_admin on storage.objects for all to authenticated
 using(bucket_id='course-staging-media' and course_staging.course_is_admin())

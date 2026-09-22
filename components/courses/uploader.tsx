@@ -17,6 +17,7 @@ export function Uploader({
   fixedKind,
   onPendingChange,
   disabled = false,
+  mp4Replacement = false,
 }: {
   courseId: string;
   assets: Asset[];
@@ -24,6 +25,7 @@ export function Uploader({
   fixedKind?: Asset["kind"];
   onPendingChange?: (pending: boolean) => void;
   disabled?: boolean;
+  mp4Replacement?: boolean;
 }) {
   const [kind, setKind] = useState<"video" | "image" | "attachment">(
       fixedKind ?? "video",
@@ -35,6 +37,11 @@ export function Uploader({
   const [inputVersion, setInputVersion] = useState(0);
   const [dragging, setDragging] = useState(false);
   const [canPause, setCanPause] = useState(false);
+  function validateFile(file: File) {
+    validateUpload(file.name, kind, file.size);
+    if (mp4Replacement && !file.name.toLowerCase().endsWith(".mp4"))
+      throw new Error("Choose a converted MP4 to replace this MOV.");
+  }
   const [paused, setPaused] = useState(false);
   const [completedName, setCompletedName] = useState("");
   const inFlight = useRef(false);
@@ -70,7 +77,7 @@ export function Uploader({
     setCompletedName("");
     setError("");
     try {
-      validateUpload(file.name, kind, file.size);
+      validateFile(file);
       const resumeKey = `course-upload:${supabaseEnvironment().url}:${courseStorageConfig().bucket}:${courseId}:${kind}:${file.name}:${file.size}:${file.lastModified}`;
       function clearResume() {
         try {
@@ -232,7 +239,7 @@ export function Uploader({
     setCompletedName("");
     setPaused(false);
     try {
-      validateUpload(next.name, kind, next.size);
+      validateFile(next);
       if (
         !file ||
         file.name !== next.name ||
@@ -273,20 +280,24 @@ export function Uploader({
       <div>
         <UploadCloud size={26} />
         <h3>
-          {fixedKind === "video"
-            ? "Upload a video"
-            : fixedKind === "image"
-              ? "Upload an image"
-              : fixedKind === "attachment"
-                ? "Add a resource"
-                : "Add a file"}
+          {mp4Replacement
+            ? "Replace MOV with MP4"
+            : fixedKind === "video"
+              ? "Upload a video"
+              : fixedKind === "image"
+                ? "Upload an image"
+                : fixedKind === "attachment"
+                  ? "Add a resource"
+                  : "Add a file"}
         </h3>
         <p>
-          {kind === "video"
-            ? "Drop an MP4 here, or choose a file. Up to 5 GB."
-            : kind === "image"
-              ? "Drop a JPG or PNG here, or choose a file. Up to 25 MB."
-              : "Drop a PDF, Word document, or image here. Up to 25 MB per file."}
+          {mp4Replacement
+            ? "Drop your converted MP4 here, or choose a file. Up to 5 GB."
+            : kind === "video"
+              ? "Drop an MP4 or MOV here, or choose a file. Up to 5 GB."
+              : kind === "image"
+                ? "Drop a JPG or PNG here, or choose a file. Up to 25 MB."
+                : "Drop a PDF, Word document, or image here. Up to 25 MB per file."}
         </p>
         <p className="academy-small academy-muted">
           Upload starts automatically when you choose a file.
@@ -319,14 +330,18 @@ export function Uploader({
         <label
           className={`academy-file-picker ${busy || disabled ? "is-disabled" : ""}`}
         >
-          <span>Choose file</span>
+          <span>
+            {mp4Replacement ? "Choose MP4 replacement" : "Choose file"}
+          </span>
           <input
             key={`${kind}-${inputVersion}`}
             type="file"
             disabled={busy || disabled}
             accept={
               kind === "video"
-                ? ".mp4"
+                ? mp4Replacement
+                  ? ".mp4"
+                  : ".mp4,.mov"
                 : kind === "image"
                   ? ".jpg,.jpeg,.png"
                   : ".doc,.docx,.pdf,.jpg,.jpeg,.png"

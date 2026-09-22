@@ -73,7 +73,14 @@ test("upload constraints distinguish video, thumbnail and private resource files
   );
   assert.throws(() => validateUpload("page.html", "attachment", 1000));
   assert.throws(() => validateUpload("poster.svg", "image", 1000));
-  assert.throws(() => validateUpload("recording.mov", "video", 1000));
+  assert.deepEqual(validateUpload("recording.MOV", "video", 1000), {
+    mime: "video/quicktime",
+    extension: "mov",
+  });
+  assert.throws(() => validateUpload("large.mov", "video", 6 * 1024 ** 3));
+  assert.throws(() => validateUpload("recording.mov", "image", 1000));
+  assert.throws(() => validateUpload("recording.mov", "attachment", 1000));
+  assert.throws(() => validateUpload("recording.avi", "video", 1000));
   assert.throws(() => validateUpload("large.mp4", "video", 6 * 1024 ** 3));
   assert.throws(() => validateUpload("empty.pdf", "attachment", 0));
   assert.throws(() => validateUpload("not-image.pdf", "image", 1000));
