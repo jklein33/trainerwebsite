@@ -11,7 +11,15 @@ if (!publishableKey) {
   console.error('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is not set')
 }
 
-const stripePromise = publishableKey ? loadStripe(publishableKey) : null
+const stripePromise = publishableKey
+  ? loadStripe(publishableKey, {
+      developerTools: {
+        assistant: {
+          enabled: false,
+        },
+      },
+    })
+  : null
 
 interface EmbeddedCheckoutProps {
   clientSecret: string
@@ -265,9 +273,6 @@ export function EmbeddedCheckout({ clientSecret, amount, currency, paymentType =
 
   const options: StripeElementsOptions = {
     clientSecret,
-    assistant: {
-      enabled: false,
-    },
     appearance: {
       theme: 'night',
       variables: {
@@ -280,7 +285,7 @@ export function EmbeddedCheckout({ clientSecret, amount, currency, paymentType =
         borderRadius: '12px',
       },
     },
-  } as StripeElementsOptions
+  }
 
   return (
     <Elements stripe={stripePromise} options={options}>
