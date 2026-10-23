@@ -3,17 +3,24 @@
 import { useState, useEffect } from "react"
 import { EmbeddedCheckout } from "@/components/embedded-checkout"
 
-interface PricingData {
-  oneTime: {
-    priceId: string
-    amount: number
-    currency: string
-    originalAmount: number | null
-  }
+interface PriceOption {
+  priceId: string
+  amount: number
+  currency: string
+  originalAmount: number | null
+  interval: string | null
 }
+
+interface PricingData {
+  oneTime: PriceOption
+  monthly: PriceOption | null
+}
+
+type Plan = "one-time" | "monthly"
 
 export default function CheckoutPage() {
   const [pricing, setPricing] = useState<PricingData | null>(null)
+  const [plan, setPlan] = useState<Plan>("one-time")
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [currency, setCurrency] = useState<string>("usd")
   const [loading, setLoading] = useState(true)
@@ -43,7 +50,6 @@ export default function CheckoutPage() {
       } catch (err) {
         console.error('Price fetch error:', err)
         setError(err instanceof Error ? err.message : 'Failed to load pricing')
-      } finally {
         setLoading(false)
       }
     }
@@ -51,45 +57,58 @@ export default function CheckoutPage() {
     fetchPrices()
   }, [])
 
-  const initializePayment = async (pricingData: PricingData) => {
-    setClientSecret(null)
-    setError(null)
-    setLoading(true)
+  const selectedPrice =
+    plan === "monthly" && pricing?.monthly ? pricing.monthly : pricing?.oneTime ?? null
+  const paymentType: "one-time" | "subscription" =
+    plan === "monthly" && pricing?.monthly ? "subscription" : "one-time"
 
-    try {
-      const response = await fetch('/api/create-payment-intent', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          priceId: pricingData.oneTime.priceId,
-          paymentType: 'one-time',
-        }),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error || 'Failed to initialize payment')
-      }
-
-      const data = await response.json()
-      setClientSecret(data.clientSecret)
-      setCurrency(data.currency)
-    } catch (err) {
-      console.error('Payment intent creation error:', err)
-      setError(err instanceof Error ? err.message : 'Failed to initialize payment')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  // Initialize payment when pricing is loaded
+  // Initialize payment when pricing loads or the selected plan changes
   useEffect(() => {
-    if (pricing) {
-      initializePayment(pricing)
+    if (!pricing || !selectedPrice) return
+
+    let cancelled = false
+
+    const initializePayment = async () => {
+      setClientSecret(null)
+      setError(null)
+      setLoading(true)
+
+      try {
+        const response = await fetch('/api/create-payment-intent', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            priceId: selectedPrice.priceId,
+            paymentType,
+          }),
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}))
+          throw new Error(errorData.error || 'Failed to initialize payment')
+        }
+
+        const data = await response.json()
+        if (cancelled) return
+        setClientSecret(data.clientSecret)
+        setCurrency(data.currency)
+      } catch (err) {
+        if (cancelled) return
+        console.error('Payment intent creation error:', err)
+        setError(err instanceof Error ? err.message : 'Failed to initialize payment')
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
     }
-  }, [pricing])
+
+    initializePayment()
+
+    return () => {
+      cancelled = true
+    }
+  }, [pricing, selectedPrice, paymentType])
 
   return (
     <main className="min-h-screen bg-black">
@@ -134,25 +153,36 @@ export default function CheckoutPage() {
                 </ul>
               </div>
 
-              {/* One-time Price */}
               {pricing && (
-                <div className="bg-gray-900/50 rounded-2xl p-6 mb-6 border border-gray-800">
-                  <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-2xl font-bold text-white">
-                      {formatAmount(pricing.oneTime.amount, pricing.oneTime.currency)}
-                    </span>
-                    {pricing.oneTime.originalAmount && (
-                      <span className="text-lg text-gray-400 line-through">
-                        {formatAmount(pricing.oneTime.originalAmount, pricing.oneTime.currency)}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-gray-300">One-time fee</p>
+                <div className={`grid gap-3 mb-6 ${pricing.monthly ? "sm:grid-cols-2" : ""}`}>
+                  <PlanOption
+                    label="One-time"
+                    detail="One-time fee"
+                    amount={pricing.oneTime.amount}
+                    currency={pricing.oneTime.currency}
+                    originalAmount={pricing.oneTime.originalAmount}
+                    selected={plan === "one-time"}
+                    onSelect={() => setPlan("one-time")}
+                    formatAmount={formatAmount}
+                  />
+                  {pricing.monthly && (
+                    <PlanOption
+                      label="Monthly"
+                      detail="Billed monthly"
+                      amount={pricing.monthly.amount}
+                      currency={pricing.monthly.currency}
+                      originalAmount={pricing.monthly.originalAmount}
+                      cadence="/mo"
+                      selected={plan === "monthly"}
+                      onSelect={() => setPlan("monthly")}
+                      formatAmount={formatAmount}
+                    />
+                  )}
                 </div>
               )}
 
               {/* Total Due Today Summary */}
-              {pricing && (
+              {selectedPrice && (
                 <div className="bg-gray-900/50 rounded-xl p-6 border border-gray-800 mb-6">
                   <div className="flex justify-between items-center">
                     <div>
@@ -160,7 +190,9 @@ export default function CheckoutPage() {
                     </div>
                     <div className="text-right">
                       <p className="text-2xl font-bold text-white">
-                        {formatAmount(pricing.oneTime.amount, currency)} {currency.toUpperCase()}
+                        {formatAmount(selectedPrice.amount, currency)}
+                        {paymentType === "subscription" ? "/mo" : ""}{" "}
+                        {currency.toUpperCase()}
                       </p>
                     </div>
                   </div>
@@ -181,13 +213,14 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              {clientSecret && !loading && pricing && (
+              {clientSecret && !loading && selectedPrice && (
                 <EmbeddedCheckout
+                  key={clientSecret}
                   clientSecret={clientSecret}
-                  amount={pricing.oneTime.amount}
+                  amount={selectedPrice.amount}
                   currency={currency}
-                  paymentType="one-time"
-                  priceId={pricing.oneTime.priceId}
+                  paymentType={paymentType}
+                  priceId={selectedPrice.priceId}
                 />
               )}
             </div>
@@ -275,5 +308,55 @@ export default function CheckoutPage() {
         </div>
       </div>
     </main>
+  )
+}
+
+function PlanOption({
+  label,
+  detail,
+  amount,
+  currency,
+  originalAmount,
+  cadence = "",
+  selected,
+  onSelect,
+  formatAmount,
+}: {
+  label: string
+  detail: string
+  amount: number
+  currency: string
+  originalAmount: number | null
+  cadence?: string
+  selected: boolean
+  onSelect: () => void
+  formatAmount: (amount: number, currency: string) => string
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      aria-pressed={selected}
+      className={`text-left rounded-2xl p-6 border transition-colors ${
+        selected
+          ? "bg-gray-900/80 border-orange-500"
+          : "bg-gray-900/50 border-gray-800 hover:border-gray-600"
+      }`}
+    >
+      <p className="text-sm font-semibold uppercase tracking-wide text-orange-500 mb-2">{label}</p>
+      <div className="flex items-baseline gap-2 mb-1">
+        <span className="text-2xl font-bold text-white">
+          {formatAmount(amount, currency)}
+          {cadence}
+        </span>
+        {originalAmount && (
+          <span className="text-lg text-gray-400 line-through">
+            {formatAmount(originalAmount, currency)}
+            {cadence}
+          </span>
+        )}
+      </div>
+      <p className="text-sm text-gray-300">{detail}</p>
+    </button>
   )
 }

@@ -19,12 +19,14 @@ export default async function SuccessPage({
     payment_intent?: string
     payment_intent_client_secret?: string
     redirect_status?: string
+    subscription_id?: string
   }>
 }) {
   const params = await searchParams
   const sessionId = params.session_id
   const paymentIntentId = params.payment_intent
   const redirectStatus = params.redirect_status
+  const subscriptionId = params.subscription_id
 
   let paymentStatus: 'success' | 'unknown' = 'unknown'
   let paymentDetails: { amount?: number; currency?: string } = {}
@@ -43,6 +45,23 @@ export default async function SuccessPage({
       }
     } catch (error) {
       console.error('Error retrieving payment intent:', error)
+    }
+  }
+
+  if (subscriptionId && paymentStatus === 'unknown') {
+    try {
+      const stripe = getStripe()
+      const subscription = await stripe.subscriptions.retrieve(subscriptionId)
+      if (subscription.status === 'active' || subscription.status === 'trialing') {
+        paymentStatus = 'success'
+        const item = subscription.items.data[0]
+        paymentDetails = {
+          amount: item?.price.unit_amount ?? undefined,
+          currency: item?.price.currency,
+        }
+      }
+    } catch (error) {
+      console.error('Error retrieving subscription:', error)
     }
   }
 

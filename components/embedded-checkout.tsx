@@ -148,7 +148,7 @@ function CheckoutForm({ clientSecret, amount, currency, paymentType = 'one-time'
           }
 
           // Redirect to success page
-          window.location.href = '/success'
+          window.location.href = `/success?subscription_id=${encodeURIComponent(data.subscriptionId)}`
         }
       } catch (err) {
         console.error('Subscription error:', err)
@@ -196,7 +196,7 @@ function CheckoutForm({ clientSecret, amount, currency, paymentType = 'one-time'
         <div className="mb-4">
           <h3 className="text-2xl font-bold text-white mb-2">Complete Your Purchase</h3>
           <p className="text-lg text-gray-300">
-            Total: <span className="text-orange-500 font-bold">{formatAmount(amount, currency)}</span>
+            Total: <span className="text-orange-500 font-bold">{formatAmount(amount, currency)}{paymentType === 'subscription' ? '/mo' : ''}</span>
           </p>
         </div>
         
@@ -255,7 +255,11 @@ function CheckoutForm({ clientSecret, amount, currency, paymentType = 'one-time'
           size="lg"
           className="w-full bg-orange-500 text-white hover:bg-orange-600 disabled:bg-gray-700 disabled:text-gray-400 disabled:cursor-not-allowed text-lg px-8 py-6 rounded-xl font-bold shadow-lg transition-colors"
         >
-          {loading ? 'Processing...' : `Pay ${formatAmount(amount, currency)}`}
+          {loading
+            ? 'Processing...'
+            : paymentType === 'subscription'
+              ? `Subscribe ${formatAmount(amount, currency)}/mo`
+              : `Pay ${formatAmount(amount, currency)}`}
         </Button>
       </div>
     </form>
