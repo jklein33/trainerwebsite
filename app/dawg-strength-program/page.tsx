@@ -41,12 +41,12 @@ export default function DawgStrengthProgram() {
             
             {/* Right: Hero Image */}
             <div className="relative">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-black">
+              <div className="relative aspect-[550/1024] overflow-hidden rounded-2xl bg-black">
                 <Image
-                  src="/images/classic_stage.jpg"
+                  src="/images/james_gym_front.jpg"
                   alt="James - competitive bodybuilder and successful IT professional"
                   fill
-                  className="object-contain object-center"
+                  className="object-cover object-center"
                   sizes="(min-width: 1024px) 50vw, 100vw"
                   priority
                 />
