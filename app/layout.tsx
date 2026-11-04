@@ -79,7 +79,7 @@ export default function RootLayout({
             gtag('config', '${GOOGLE_TAG_ID}');
           `}
         </Script>
-        <Script id="mouseflow" strategy="afterInteractive">
+        <Script id="mouseflow-loader" strategy="afterInteractive">
           {`
             window._mfq = window._mfq || [];
             (function() {
