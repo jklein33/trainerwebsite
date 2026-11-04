@@ -79,6 +79,17 @@ export default function RootLayout({
             gtag('config', '${GOOGLE_TAG_ID}');
           `}
         </Script>
+        <Script id="mouseflow" strategy="afterInteractive">
+          {`
+            window._mfq = window._mfq || [];
+            (function() {
+              var mf = document.createElement("script");
+              mf.type = "text/javascript"; mf.defer = true;
+              mf.src = "//cdn.mouseflow.com/projects/3c0f05ad-75b6-4ba0-9516-57f39c535337.js";
+              document.getElementsByTagName("head")[0].appendChild(mf);
+            })();
+          `}
+        </Script>
       </head>
       <body
         className={`${fkGrotesk.variable} font-sans antialiased`}
