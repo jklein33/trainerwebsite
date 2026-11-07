@@ -5,7 +5,11 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { Nav } from "@/components/nav";
 
-const GOOGLE_TAG_ID = "AW-18311040389";
+import { GOOGLE_TAG_ID } from "@/lib/analytics";
+
+// Optional Google Tag Manager container (e.g. GTM-XXXXXXX). When set, GTM loads
+// on every page and can trigger tags off the dataLayer events in lib/analytics.
+const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
 
 const fkGrotesk = localFont({
   src: [
@@ -79,6 +83,17 @@ export default function RootLayout({
             gtag('config', '${GOOGLE_TAG_ID}');
           `}
         </Script>
+        {GTM_ID && (
+          <Script id="google-tag-manager" strategy="afterInteractive">
+            {`
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','${GTM_ID}');
+            `}
+          </Script>
+        )}
         <Script id="mouseflow-loader" strategy="afterInteractive">
           {`
             window._mfq = window._mfq || [];

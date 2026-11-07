@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Stripe from "stripe"
+import { TrackPurchase } from "@/components/track-purchase"
 
 function getStripe() {
   if (!process.env.STRIPE_SECRET_KEY) {
@@ -30,6 +31,8 @@ export default async function SuccessPage({
 
   let paymentStatus: 'success' | 'unknown' = 'unknown'
   let paymentDetails: { amount?: number; currency?: string } = {}
+  let transactionId: string | undefined
+  let plan: 'monthly' | 'annual' = 'annual'
 
   // Verify payment intent if present
   if (paymentIntentId) {
@@ -42,6 +45,7 @@ export default async function SuccessPage({
           amount: paymentIntent.amount,
           currency: paymentIntent.currency,
         }
+        transactionId = paymentIntent.id
       }
     } catch (error) {
       console.error('Error retrieving payment intent:', error)
@@ -59,6 +63,8 @@ export default async function SuccessPage({
           amount: item?.price.unit_amount ?? undefined,
           currency: item?.price.currency,
         }
+        transactionId = subscription.id
+        plan = 'monthly'
       }
     } catch (error) {
       console.error('Error retrieving subscription:', error)
@@ -76,6 +82,7 @@ export default async function SuccessPage({
           amount: session.amount_total ?? undefined,
           currency: session.currency ?? undefined,
         }
+        transactionId = session.id
       }
     } catch (error) {
       console.error('Error retrieving checkout session:', error)
@@ -95,6 +102,14 @@ export default async function SuccessPage({
       <div className="max-w-2xl w-full text-center space-y-8">
         {paymentStatus === 'success' ? (
           <div className="space-y-6">
+            {transactionId && paymentDetails.amount && paymentDetails.currency && (
+              <TrackPurchase
+                transactionId={transactionId}
+                plan={plan}
+                amount={paymentDetails.amount}
+                currency={paymentDetails.currency}
+              />
+            )}
             <h1 className="text-4xl font-bold text-white sm:text-5xl">
               Payment Successful!
             </h1>

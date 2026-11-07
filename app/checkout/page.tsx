@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { EmbeddedCheckout } from "@/components/embedded-checkout"
+import { trackBeginCheckout, trackSelectPlan } from "@/lib/analytics"
 
 interface PriceOption {
   priceId: string
@@ -20,7 +21,10 @@ type Plan = "one-time" | "monthly"
 
 export default function CheckoutPage() {
   const [pricing, setPricing] = useState<PricingData | null>(null)
-  const [plan, setPlan] = useState<Plan>("one-time")
+  // Lead with the monthly plan; the pay-in-full option sits behind a button so
+  // the annual price isn't the first number visitors see.
+  const [plan, setPlan] = useState<Plan>("monthly")
+  const [showAnnual, setShowAnnual] = useState(false)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [currency, setCurrency] = useState<string>("usd")
   const [loading, setLoading] = useState(true)
@@ -61,6 +65,20 @@ export default function CheckoutPage() {
     plan === "monthly" && pricing?.monthly ? pricing.monthly : pricing?.oneTime ?? null
   const paymentType: "one-time" | "subscription" =
     plan === "monthly" && pricing?.monthly ? "subscription" : "one-time"
+  const trackedPlan = paymentType === "subscription" ? "monthly" : "annual"
+
+  // Reaching checkout is a high-intent signal (source for the cart-abandoner
+  // audience). Fire once pricing is known so the event carries a value.
+  useEffect(() => {
+    if (selectedPrice) trackBeginCheckout(trackedPlan, selectedPrice.amount, selectedPrice.currency)
+  }, [selectedPrice, trackedPlan])
+
+  const choosePlan = (next: Plan) => {
+    if (next === plan || !pricing) return
+    setPlan(next)
+    const price = next === "monthly" && pricing.monthly ? pricing.monthly : pricing.oneTime
+    trackSelectPlan(next === "monthly" ? "monthly" : "annual", price.amount, price.currency)
+  }
 
   // Initialize payment when pricing loads or the selected plan changes
   useEffect(() => {
@@ -154,29 +172,45 @@ export default function CheckoutPage() {
               </div>
 
               {pricing && (
-                <div className={`grid gap-3 mb-6 ${pricing.monthly ? "sm:grid-cols-2" : ""}`}>
-                  <PlanOption
-                    label="One-time"
-                    detail="One-time fee"
-                    amount={pricing.oneTime.amount}
-                    currency={pricing.oneTime.currency}
-                    originalAmount={pricing.oneTime.originalAmount}
-                    selected={plan === "one-time"}
-                    onSelect={() => setPlan("one-time")}
-                    formatAmount={formatAmount}
-                  />
-                  {pricing.monthly && (
-                    <PlanOption
-                      label="Monthly"
-                      detail="Billed monthly"
-                      amount={pricing.monthly.amount}
-                      currency={pricing.monthly.currency}
-                      originalAmount={pricing.monthly.originalAmount}
-                      cadence="/mo"
-                      selected={plan === "monthly"}
-                      onSelect={() => setPlan("monthly")}
-                      formatAmount={formatAmount}
-                    />
+                <div className="mb-6 space-y-3">
+                  <div className={`grid gap-3 ${pricing.monthly && showAnnual ? "sm:grid-cols-2" : ""}`}>
+                    {pricing.monthly && (
+                      <PlanOption
+                        label="Monthly"
+                        detail="Billed monthly"
+                        amount={pricing.monthly.amount}
+                        currency={pricing.monthly.currency}
+                        originalAmount={pricing.monthly.originalAmount}
+                        cadence="/mo"
+                        selected={paymentType === "subscription"}
+                        onSelect={() => choosePlan("monthly")}
+                        formatAmount={formatAmount}
+                      />
+                    )}
+                    {(showAnnual || !pricing.monthly) && (
+                      <PlanOption
+                        label="Pay in full"
+                        detail="Annual access, one payment"
+                        amount={pricing.oneTime.amount}
+                        currency={pricing.oneTime.currency}
+                        originalAmount={pricing.oneTime.originalAmount}
+                        selected={paymentType === "one-time"}
+                        onSelect={() => choosePlan("one-time")}
+                        formatAmount={formatAmount}
+                      />
+                    )}
+                  </div>
+                  {pricing.monthly && !showAnnual && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowAnnual(true)
+                        choosePlan("one-time")
+                      }}
+                      className="text-sm text-gray-300 underline underline-offset-4 hover:text-orange-500 transition-colors"
+                    >
+                      Prefer to pay annually? See the pay-in-full option
+                    </button>
                   )}
                 </div>
               )}
