@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 
 export function AboutSection() {
   return (
-    <section id="about" className="bg-black px-6 py-24 lg:px-12">
+    <section id="about" className="scroll-mt-56 bg-black px-6 py-24 lg:px-12">
       <div className="container mx-auto max-w-6xl">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Left Image */}

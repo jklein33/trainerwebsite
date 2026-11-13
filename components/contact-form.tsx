@@ -57,7 +57,7 @@ export function ContactForm() {
   }
 
   return (
-    <section id="contact" className="relative overflow-hidden bg-black px-6 py-24 lg:px-12">
+    <section id="contact" className="relative scroll-mt-56 overflow-hidden bg-black px-6 py-24 lg:px-12">
       <div className="absolute inset-0">
         <Image
           src="/images/ambitious-studio-rick-barrett-1RNQ11ZODJM-unsplash.jpg"

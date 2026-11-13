@@ -33,7 +33,7 @@ const services = [
 
 export function Services() {
   return (
-    <section id="services" className="relative overflow-hidden bg-black px-6 py-24 lg:px-12">
+    <section id="services" className="relative scroll-mt-56 overflow-hidden bg-black px-6 py-24 lg:px-12">
       <div className="absolute inset-0">
         <Image
           src="/images/ambitious-studio-rick-barrett-aw9cszR7FGU-unsplash.jpg"

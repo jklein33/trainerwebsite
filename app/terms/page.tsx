@@ -79,7 +79,7 @@ export default function TermsPage() {
                 <div>
                   <h3 className="text-xl font-semibold text-white mb-2">5.1. Third-Party Services</h3>
                   <p>
-                    The Community may integrate with third-party platforms, including Discord (for community) and GoHighLevel (for online program delivery). Your use of Discord is subject to <Link href="https://discord.com/terms" target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:text-orange-600 underline">Discord's Terms of Service</Link> and <Link href="https://discord.com/guidelines" target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:text-orange-600 underline">Community Guidelines</Link>. Your use of GoHighLevel is subject to <Link href="https://www.gohighlevel.com/terms-of-service" target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:text-orange-600 underline">GoHighLevel's Terms of Service</Link>. Community Owner is not responsible for third-party services.
+                    The Community may integrate with third-party platforms, including Discord (for community). Your use of Discord is subject to <Link href="https://discord.com/terms" target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:text-orange-600 underline">Discord's Terms of Service</Link> and <Link href="https://discord.com/guidelines" target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:text-orange-600 underline">Community Guidelines</Link>. Community Owner is not responsible for third-party services.
                   </p>
                 </div>
                 <div>
@@ -242,7 +242,7 @@ export default function TermsPage() {
               <section className="mt-6">
                 <h3 className="text-xl font-semibold text-white mb-3">5. SCOPE OF SERVICES FOR THE ONLINE PROGRAM</h3>
                 <ul className="list-disc list-inside space-y-2 ml-4">
-                  <li><strong>Asynchronous course material:</strong> Video lessons, resources, and community support primarily hosted on Discord, with course delivery potentially via GoHighLevel.</li>
+                  <li><strong>Asynchronous course material:</strong> Video lessons, resources, and community support primarily hosted on Discord.</li>
                   <li><strong>Live group support calls</strong> as scheduled.</li>
                   <li><strong>Group community/forum</strong> on Discord.</li>
                   <li><strong>Additional Support:</strong> Questions in community forum; customer service via email.</li>
